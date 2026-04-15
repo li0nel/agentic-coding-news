@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Timeline — 15 Design Variations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg: #08080c;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --surface3: #222230;
+    --border: #2a2a3a;
+    --border-light: #3a3a4a;
+    --text: #e8e8f0;
+    --text-muted: #8888a0;
+    --text-dim: #555568;
+    --accent: #d4a574;
+    --accent2: #7c9de0;
+    --accent3: #6bc9a0;
+    --red: #e07070;
+    --purple: #b08cdb;
+    --orange: #e0a050;
+    --cyan: #5cc8d4;
+    --pink: #d47ca0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  .page-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,12,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .page-nav::-webkit-scrollbar { display: none; }
+  .page-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .page-nav a:hover { color: var(--text); background: var(--surface2); }
+  .page-nav-label {
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  /* ── SHARED ── */
+  .variation {
+    min-height: 100vh;
+    padding: 80px 0;
+    border-bottom: 2px solid var(--border);
+    position: relative;
+  }
+  .variation:nth-child(even) { background: var(--surface); }
+  .var-label {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.6;
+  }
+  .var-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .var-wide { max-width: 1200px; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .t-feature { background: rgba(212,165,116,0.15); color: var(--accent); }
+  .t-security { background: rgba(224,112,112,0.15); color: var(--red); }
+  .t-mcp { background: rgba(124,157,224,0.15); color: var(--accent2); }
+  .t-plugin { background: rgba(176,140,219,0.15); color: var(--purple); }
+  .t-hooks { background: rgba(107,201,160,0.15); color: var(--accent3); }
+  .t-perf { background: rgba(92,200,212,0.15); color: var(--cyan); }
+  .t-ide { background: rgba(224,160,80,0.15); color: var(--orange); }
+
+  .sig-major { color: var(--accent); font-weight: 700; }
+  .sig-notable { color: var(--accent2); }
+  .sig-minor { color: var(--text-dim); }
+
+
+  /* ═══════════════════════════════════════════
+     V1: CLASSIC VERTICAL — Left-aligned dots
+     ═══════════════════════════════════════════ */
+  #v1 .v1-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  #v1 .v1-header h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  #v1 .v1-header p { color: var(--text-muted); font-size: 0.9rem; }
+  #v1 .v1-timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+  #v1 .v1-timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+    opacity: 0.3;
+  }
+  #v1 .v1-month {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 32px 0 16px;
+    position: relative;
+  }
+  #v1 .v1-month::before {
+    content: '';
+    position: absolute;
+    left: -36px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+  }
+  #v1 .v1-entry {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  #v1 .v1-entry::before {
+    content: '';
+    position: absolute;
+    left: -36px;
+    top: 22px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--surface3);
+    border: 2px solid var(--accent2);
+  }
+  #v1 .v1-entry-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  #v1 .v1-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+  #v1 .v1-date { font-size: 0.75rem; color: var(--text-muted); }
+  #v1 .v1-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; }
+  #v1 .v1-body { font-size: 0.82rem; color: var(--text-muted); }
+  #v1 .v1-body li { margin-bottom: 3px; }
+  #v1 .v1-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+
+
+  /* ═══════════════════════════════════════════
+     V2: ALTERNATING — Cards left and right
+     ═══════════════════════════════════════════ */
+  #v2 .v2-header { text-align: center; margin-bottom: 48px; }
+  #v2 .v2-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  #v2 .v2-header .line {
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: 12px auto;
+  }
+  #v2 .v2-header p { color: var(--text-muted); font-size: 0.85rem; }
+  #v2 .v2-timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  #v2 .v2-timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+    transform: translateX(-50%);
+  }
+  #v2 .v2-entry {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  #v2 .v2-entry:nth-child(odd) { flex-direction: row; }
+  #v2 .v2-entry:nth-child(even) { flex-direction: row-reverse; }
+  #v2 .v2-card {
+    width: 44%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  #v2 .v2-entry:nth-child(odd) .v2-card { margin-right: auto; text-align: right; }
+  #v2 .v2-entry:nth-child(even) .v2-card { margin-left: auto; }
+  #v2 .v2-dot {
+    position: absolute;
+    left: 50%;
+    top: 22px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  #v2 .v2-dot.notable { background: var(--accent2); }
+  #v2 .v2-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  #v2 .v2-title { font-weight: 600; font-size: 0.9rem; margin: 6px 0; }
+  #v2 .v2-date { font-size: 0.72rem; color: var(--text-dim); }
+  #v2 .v2-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+
+  /* ═══════════════════════════════════════════
+     V3: GAZETTE — Newspaper column style
+     ═══════════════════════════════════════════ */
+  #v3 .v3-header {
+    text-align: center;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 4px double var(--text);
+  }
+  #v3 .v3-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -1px;
+  }
+  #v3 .v3-header .v3-dateline {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-top: 4px;
+  }
+  #v3 .v3-rule { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  #v3 .v3-grid {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    gap: 0 20px;
+  }
+  #v3 .v3-divider { background: var(--border); }
+  #v3 .v3-col { padding: 0 4px; }
+  #v3 .v3-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  #v3 .v3-byline {
+    font-size: 0.7rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  #v3 .v3-body {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    columns: 1;
+  }
+  #v3 .v3-lead {
+    grid-column: 1 / -1;
+    padding: 0 4px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  #v3 .v3-lead .v3-headline { font-size: 1.8rem; }
+  #v3 .v3-lead .v3-body { columns: 2; column-gap: 24px; }
+  #v3 .v3-sidebar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    margin-top: 16px;
+    font-size: 0.78rem;
+  }
+  #v3 .v3-sidebar h4 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  #v3 .v3-sidebar li {
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    list-style: none;
+    padding-left: 0;
+  }
+  #v3 .v3-sidebar li::before { content: '\25B8 '; color: var(--accent); }
+
+
+  /* ═══════════════════════════════════════════
+     V4: GITHUB STYLE — Contribution grid + list
+     ═══════════════════════════════════════════ */
+  #v4 .v4-header { margin-bottom: 24px; }
+  #v4 .v4-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #v4 .v4-header h1 .icon {
+    width: 28px;
+    height: 28px;
+    background: var(--accent2);
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+  #v4 .v4-grid-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  #v4 .v4-grid-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  #v4 .v4-grid {
+    display: flex;
+    gap: 3px;
+  }
+  #v4 .v4-week {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  #v4 .v4-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: var(--surface2);
+  }
+  #v4 .v4-cell.l1 { background: rgba(107,201,160,0.25); }
+  #v4 .v4-cell.l2 { background: rgba(107,201,160,0.45); }
+  #v4 .v4-cell.l3 { background: rgba(107,201,160,0.7); }
+  #v4 .v4-cell.l4 { background: rgba(107,201,160,1); }
+  #v4 .v4-list { list-style: none; }
+  #v4 .v4-item {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  #v4 .v4-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--accent3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  #v4 .v4-item-content { flex: 1; }
+  #v4 .v4-item-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  #v4 .v4-item-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent2);
+  }
+  #v4 .v4-item-title { font-weight: 600; font-size: 0.88rem; }
+  #v4 .v4-item-date { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
+  #v4 .v4-item-body { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+
+  /* ═══════════════════════════════════════════
+     V5: BENTO GRID — Masonry-ish cards
+     ═══════════════════════════════════════════ */
+  #v5 .v5-header { text-align: center; margin-bottom: 40px; }
+  #v5 .v5-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  #v5 .v5-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  #v5 .v5-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  #v5 .v5-card:hover { border-color: var(--accent); }
+  #v5 .v5-card.span2 { grid-column: span 2; }
+  #v5 .v5-card.tall { grid-row: span 2; }
+  #v5 .v5-card.hero {
+    grid-column: span 3;
+    background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(124,157,224,0.08));
+    border-color: rgba(212,165,116,0.3);
+    padding: 28px 32px;
+  }
+  #v5 .v5-card-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    margin-bottom: 6px;
+  }
+  #v5 .v5-card-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  #v5 .v5-card.hero .v5-card-title { font-size: 1.3rem; }
+  #v5 .v5-card-body { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+  #v5 .v5-card-tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+  #v5 .v5-card-date { font-size: 0.7rem; color: var(--text-dim); margin-top: 10px; }
+
+
+  /* ═══════════════════════════════════════════
+     V6: TERMINAL — CLI aesthetic
+     ═══════════════════════════════════════════ */
+  #v6 .v6-term {
+    background: #0d0d0d;
+    border: 1px solid #333;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  #v6 .v6-bar {
+    background: #1a1a1a;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #333;
+  }
+  #v6 .v6-dot { width: 12px; height: 12px; border-radius: 50%; }
+  #v6 .v6-dot.r { background: #ff5f56; }
+  #v6 .v6-dot.y { background: #ffbd2e; }
+  #v6 .v6-dot.g { background: #27c93f; }
+  #v6 .v6-bar-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.72rem;
+    color: #888;
+  }
+  #v6 .v6-body {
+    padding: 20px;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  #v6 .v6-prompt { color: #6bc9a0; }
+  #v6 .v6-cmd { color: #e8e8f0; }
+  #v6 .v6-comment { color: #555; }
+  #v6 .v6-version { color: #7c9de0; font-weight: 600; }
+  #v6 .v6-date { color: #888; }
+  #v6 .v6-feat { color: #d4a574; }
+  #v6 .v6-sec { color: #e07070; }
+  #v6 .v6-sep { color: #333; }
+  #v6 .v6-entry { margin-bottom: 12px; }
+  #v6 .v6-bullet { color: #555; }
+  #v6 .v6-detail { color: #aaa; padding-left: 4ch; }
+  #v6 .v6-highlight { color: #ffbd2e; }
+
+
+  /* ═══════════════════════════════════════════
+     V7: MINIMAL LIST — Bold typography
+     ═══════════════════════════════════════════ */
+  #v7 .v7-header { margin-bottom: 48px; }
+  #v7 .v7-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: var(--text);
+  }
+  #v7 .v7-header .v7-sub {
+    font-size: 1rem;
+    color: var(--text-dim);
+    margin-top: 8px;
+    font-weight: 300;
+  }
+  #v7 .v7-month {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin: 40px 0 16px;
+  }
+  #v7 .v7-entry {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(42,42,58,0.5);
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+  }
+  #v7 .v7-entry:hover { background: rgba(255,255,255,0.02); margin: 0 -12px; padding: 14px 12px; }
+  #v7 .v7-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    width: 70px;
+    flex-shrink: 0;
+  }
+  #v7 .v7-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    flex: 1;
+    letter-spacing: -0.3px;
+  }
+  #v7 .v7-title .v7-major-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  #v7 .v7-date {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+
+  /* ═══════════════════════════════════════════
+     V8: MAGAZINE SPREAD — Hero + sidebar
+     ═══════════════════════════════════════════ */
+  #v8 .v8-spread {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 40px;
+  }
+  #v8 .v8-main {}
+  #v8 .v8-hero {
+    background: linear-gradient(135deg, rgba(212,165,116,0.1), rgba(124,157,224,0.1));
+    border: 1px solid rgba(212,165,116,0.2);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  #v8 .v8-hero-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  #v8 .v8-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  #v8 .v8-hero p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+  #v8 .v8-list {}
+  #v8 .v8-list-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  #v8 .v8-list-item-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  #v8 .v8-list-item h3 { font-size: 0.95rem; font-weight: 600; }
+  #v8 .v8-list-item p { font-size: 0.8rem; color: var(--text-muted); }
+  #v8 .v8-sidebar {}
+  #v8 .v8-sidebar-section {
+    margin-bottom: 28px;
+  }
+  #v8 .v8-sidebar-section h3 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  #v8 .v8-stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 0.82rem;
+    border-bottom: 1px solid rgba(42,42,58,0.3);
+  }
+  #v8 .v8-stat-row .num { font-weight: 700; color: var(--accent); }
+  #v8 .v8-sidebar-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(42,42,58,0.3);
+  }
+  #v8 .v8-sidebar-item .name { font-size: 0.82rem; font-weight: 600; }
+  #v8 .v8-sidebar-item .desc { font-size: 0.72rem; color: var(--text-muted); }
+
+
+  /* ═══════════════════════════════════════════
+     V9: KANBAN COLUMNS — Month columns
+     ═══════════════════════════════════════════ */
+  #v9 .v9-header { text-align: center; margin-bottom: 32px; }
+  #v9 .v9-header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+  #v9 .v9-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    overflow-x: auto;
+  }
+  #v9 .v9-col {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  #v9 .v9-col-head {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  #v9 .v9-col-count {
+    background: var(--surface3);
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+  }
+  #v9 .v9-ticket {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: default;
+    transition: border-color 0.15s;
+  }
+  #v9 .v9-ticket:hover { border-color: var(--accent2); }
+  #v9 .v9-ticket-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent2);
+  }
+  #v9 .v9-ticket-title { font-size: 0.78rem; font-weight: 600; margin: 4px 0; line-height: 1.3; }
+  #v9 .v9-ticket-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  #v9 .v9-ticket-tags .tag { font-size: 0.55rem; padding: 1px 5px; }
+
+
+  /* ═══════════════════════════════════════════
+     V10: HORIZONTAL SCROLL — Swimlane
+     ═══════════════════════════════════════════ */
+  #v10 .v10-header { margin-bottom: 24px; }
+  #v10 .v10-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  #v10 .v10-scroll-wrap {
+    overflow-x: auto;
+    padding-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  #v10 .v10-track {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0;
+    position: relative;
+    min-width: max-content;
+  }
+  #v10 .v10-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border);
+    transform: translateY(-50%);
+  }
+  #v10 .v10-node {
+    width: 220px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  #v10 .v10-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  #v10 .v10-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  #v10 .v10-card.major { border-left: 3px solid var(--accent); }
+  #v10 .v10-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent2);
+    margin: 0 auto 8px;
+  }
+  #v10 .v10-card-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent2);
+  }
+  #v10 .v10-card-title { font-size: 0.8rem; font-weight: 600; margin: 4px 0; line-height: 1.3; }
+  #v10 .v10-card-date { font-size: 0.65rem; color: var(--text-dim); }
+
+
+  /* ═══════════════════════════════════════════
+     V11: ACCORDION — Collapsible months
+     ═══════════════════════════════════════════ */
+  #v11 .v11-header { text-align: center; margin-bottom: 40px; }
+  #v11 .v11-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -1px;
+  }
+  #v11 details {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  #v11 details[open] { border-color: var(--accent); }
+  #v11 summary {
+    background: var(--surface2);
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 0.95rem;
+    list-style: none;
+  }
+  #v11 summary::-webkit-details-marker { display: none; }
+  #v11 summary::after {
+    content: '+';
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+  }
+  #v11 details[open] summary::after { content: '\2212'; color: var(--accent); }
+  #v11 .v11-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 12px;
+  }
+  #v11 .v11-content { padding: 12px 20px 20px; }
+  #v11 .v11-row {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(42,42,58,0.4);
+    align-items: baseline;
+  }
+  #v11 .v11-row:last-child { border-bottom: none; }
+  #v11 .v11-row-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    width: 68px;
+    flex-shrink: 0;
+  }
+  #v11 .v11-row-sig {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  #v11 .v11-row-sig.major { background: var(--accent); }
+  #v11 .v11-row-sig.notable { background: var(--accent2); }
+  #v11 .v11-row-sig.minor { background: var(--text-dim); }
+  #v11 .v11-row-title { flex: 1; font-size: 0.88rem; }
+  #v11 .v11-row-date { font-size: 0.72rem; color: var(--text-dim); flex-shrink: 0; }
+
+
+  /* ═══════════════════════════════════════════
+     V12: DATABASE TABLE — Notion-style
+     ═══════════════════════════════════════════ */
+  #v12 .v12-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  #v12 .v12-header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  #v12 .v12-header .v12-icon {
+    font-size: 1.6rem;
+  }
+  #v12 .v12-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.75rem;
+  }
+  #v12 .v12-toolbar button {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.72rem;
+  }
+  #v12 .v12-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+  }
+  #v12 .v12-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 52px;
+    background: var(--surface);
+    z-index: 1;
+  }
+  #v12 .v12-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(42,42,58,0.3);
+    vertical-align: top;
+  }
+  #v12 .v12-table tr:hover td { background: rgba(255,255,255,0.015); }
+  #v12 .v12-table .ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    font-weight: 600;
+  }
+  #v12 .v12-table .sig-pill {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+  }
+  #v12 .sig-pill.major { background: rgba(212,165,116,0.15); color: var(--accent); }
+  #v12 .sig-pill.notable { background: rgba(124,157,224,0.15); color: var(--accent2); }
+  #v12 .sig-pill.minor { background: rgba(85,85,104,0.2); color: var(--text-dim); }
+
+
+  /* ═══════════════════════════════════════════
+     V13: APPLE KEYNOTE — Big hero cards
+     ═══════════════════════════════════════════ */
+  #v13 .v13-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  #v13 .v13-header h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff, #999);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  #v13 .v13-header p { color: var(--text-dim); font-size: 1.1rem; margin-top: 6px; }
+  #v13 .v13-hero-card {
+    background: linear-gradient(145deg, var(--surface2), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px;
+    margin-bottom: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #v13 .v13-hero-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(212,165,116,0.06), transparent 60%);
+  }
+  #v13 .v13-hero-card .v13-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  #v13 .v13-hero-card h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  #v13 .v13-hero-card p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+    position: relative;
+  }
+  #v13 .v13-hero-card .v13-date {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 16px;
+    position: relative;
+  }
+  #v13 .v13-sm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+  #v13 .v13-sm-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: border-color 0.15s;
+  }
+  #v13 .v13-sm-card:hover { border-color: rgba(212,165,116,0.4); }
+  #v13 .v13-sm-card .v13-sm-ver {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent2);
+  }
+  #v13 .v13-sm-card h3 { font-size: 0.9rem; font-weight: 600; margin: 6px 0; }
+  #v13 .v13-sm-card p { font-size: 0.78rem; color: var(--text-muted); }
+
+
+  /* ═══════════════════════════════════════════
+     V14: SOCIAL FEED — Twitter-like cards
+     ═══════════════════════════════════════════ */
+  #v14 .v14-feed { max-width: 580px; margin: 0 auto; }
+  #v14 .v14-header { text-align: center; margin-bottom: 32px; }
+  #v14 .v14-header h1 { font-size: 1.6rem; font-weight: 700; }
+  #v14 .v14-post {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+  }
+  #v14 .v14-post-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  #v14 .v14-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: #000;
+    flex-shrink: 0;
+  }
+  #v14 .v14-post-author { font-weight: 700; font-size: 0.85rem; }
+  #v14 .v14-post-handle { font-size: 0.75rem; color: var(--text-dim); }
+  #v14 .v14-post-date { font-size: 0.72rem; color: var(--text-dim); margin-left: auto; }
+  #v14 .v14-post-body { font-size: 0.88rem; line-height: 1.6; }
+  #v14 .v14-post-body code {
+    background: var(--surface2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+  }
+  #v14 .v14-post-tags { margin-top: 10px; display: flex; gap: 6px; }
+  #v14 .v14-post-reactions {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(42,42,58,0.3);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+
+  /* ═══════════════════════════════════════════
+     V15: CHANGELOG MARKDOWN — Clean dev style
+     ═══════════════════════════════════════════ */
+  #v15 .v15-doc {
+    max-width: 720px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+  }
+  #v15 .v15-header { margin-bottom: 32px; }
+  #v15 .v15-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  #v15 .v15-header .v15-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  #v15 .v15-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  #v15 .v15-badge.green { border-color: rgba(107,201,160,0.4); color: var(--accent3); }
+  #v15 .v15-badge.blue { border-color: rgba(124,157,224,0.4); color: var(--accent2); }
+  #v15 .v15-section { margin-bottom: 32px; }
+  #v15 .v15-section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #v15 .v15-section h2 .v15-h2-date {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-left: auto;
+  }
+  #v15 .v15-ver-block { margin-bottom: 20px; }
+  #v15 .v15-ver-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  #v15 .v15-ver-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  #v15 .v15-ver-title { font-weight: 600; font-size: 0.95rem; }
+  #v15 .v15-ver-list {
+    padding-left: 20px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  #v15 .v15-ver-list li { margin-bottom: 4px; }
+  #v15 .v15-ver-list code {
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ── STICKY NAV ── -->
+<nav class="page-nav">
+  <span class="page-nav-label">Variations</span>
+  <a href="#v1">1 Classic</a>
+  <a href="#v2">2 Alternating</a>
+  <a href="#v3">3 Gazette</a>
+  <a href="#v4">4 GitHub</a>
+  <a href="#v5">5 Bento</a>
+  <a href="#v6">6 Terminal</a>
+  <a href="#v7">7 Minimal</a>
+  <a href="#v8">8 Magazine</a>
+  <a href="#v9">9 Kanban</a>
+  <a href="#v10">10 Horizontal</a>
+  <a href="#v11">11 Accordion</a>
+  <a href="#v12">12 Database</a>
+  <a href="#v13">13 Keynote</a>
+  <a href="#v14">14 Social</a>
+  <a href="#v15">15 Changelog</a>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     V1: CLASSIC VERTICAL
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v1">
+  <div class="var-label">Variation 1 / 15 &mdash; Classic Vertical Timeline</div>
+  <div class="var-container">
+    <div class="v1-header">
+      <h1>Claude Code Timeline</h1>
+      <p>Every official feature, release, and update</p>
+    </div>
+    <div class="v1-timeline">
+      <div class="v1-month">April 2026</div>
+      <div class="v1-entry">
+        <div class="v1-entry-head">
+          <span class="v1-ver">v2.1.105</span>
+          <span class="v1-date">Apr 13</span>
+          <span class="sig-major" style="font-size:0.7rem">MAJOR</span>
+        </div>
+        <div class="v1-title">PreCompact hooks, background plugin monitors, EnterWorktree path</div>
+        <div class="v1-body">
+          <ul>
+            <li><code>path</code> parameter on <code>EnterWorktree</code></li>
+            <li>PreCompact hook: hooks can block compaction</li>
+            <li>Background monitor support for plugins</li>
+          </ul>
+        </div>
+        <div class="v1-tags">
+          <span class="tag t-feature">feature</span>
+          <span class="tag t-hooks">hooks</span>
+          <span class="tag t-plugin">plugins</span>
+        </div>
+      </div>
+      <div class="v1-entry">
+        <div class="v1-entry-head">
+          <span class="v1-ver">v2.1.101</span>
+          <span class="v1-date">Apr 10</span>
+          <span class="sig-major" style="font-size:0.7rem">MAJOR</span>
+        </div>
+        <div class="v1-title">/team-onboarding, OS CA trust, Ultraplan auto-cloud</div>
+        <div class="v1-body">
+          <ul>
+            <li>Generates teammate ramp-up guide from local usage</li>
+            <li>OS CA certificate store trusted by default</li>
+            <li>Security: fixed command injection CVE-2026-35021</li>
+          </ul>
+        </div>
+        <div class="v1-tags">
+          <span class="tag t-feature">feature</span>
+          <span class="tag t-security">security</span>
+        </div>
+      </div>
+      <div class="v1-entry">
+        <div class="v1-entry-head">
+          <span class="v1-ver">v2.1.98</span>
+          <span class="v1-date">Apr 9</span>
+        </div>
+        <div class="v1-title">Vertex AI wizard, Monitor tool, subprocess sandboxing</div>
+        <div class="v1-body"><ul><li>Interactive Google Vertex AI setup wizard</li><li>Monitor tool for streaming events</li></ul></div>
+        <div class="v1-tags">
+          <span class="tag t-feature">feature</span>
+          <span class="tag t-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V2: ALTERNATING LEFT/RIGHT
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v2">
+  <div class="var-label">Variation 2 / 15 &mdash; Alternating Center Timeline</div>
+  <div class="var-container var-wide">
+    <div class="v2-header">
+      <h1>Claude Code Timeline</h1>
+      <div class="line"></div>
+      <p>January 2026 &mdash; Present</p>
+    </div>
+    <div class="v2-timeline">
+      <div class="v2-entry">
+        <div class="v2-card">
+          <div class="v2-ver">v2.1.105</div>
+          <div class="v2-title">PreCompact hooks, plugin monitors</div>
+          <div class="v2-date">Apr 13, 2026</div>
+          <div class="v2-desc">Hooks can block compaction. Plugins ship background monitors. EnterWorktree accepts path param.</div>
+        </div>
+        <div class="v2-dot"></div>
+      </div>
+      <div class="v2-entry">
+        <div class="v2-card">
+          <div class="v2-ver">v2.1.101</div>
+          <div class="v2-title">/team-onboarding, OS CA trust</div>
+          <div class="v2-date">Apr 10, 2026</div>
+          <div class="v2-desc">Auto-generates ramp-up guides. Enterprise TLS proxies work out of the box. CVE-2026-35021 patched.</div>
+        </div>
+        <div class="v2-dot"></div>
+      </div>
+      <div class="v2-entry">
+        <div class="v2-card">
+          <div class="v2-ver">v2.1.98</div>
+          <div class="v2-title">Vertex AI wizard, Monitor tool</div>
+          <div class="v2-date">Apr 9, 2026</div>
+          <div class="v2-desc">Interactive Vertex setup from login screen. New Monitor tool streams background script events.</div>
+        </div>
+        <div class="v2-dot notable"></div>
+      </div>
+      <div class="v2-entry">
+        <div class="v2-card">
+          <div class="v2-ver">v2.1.80</div>
+          <div class="v2-title">1M context GA for Opus 4.6</div>
+          <div class="v2-date">Mar 14, 2026</div>
+          <div class="v2-desc">Opus 4.6 1M context window moves from preview to general availability. /color command added.</div>
+        </div>
+        <div class="v2-dot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V3: GAZETTE / NEWSPAPER
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v3">
+  <div class="var-label">Variation 3 / 15 &mdash; Gazette / Newspaper</div>
+  <div class="var-container var-wide">
+    <div class="v3-header">
+      <h1>The Claude Code Gazette</h1>
+      <div class="v3-dateline">Volume III &middot; April 15, 2026 &middot; Daily Edition</div>
+    </div>
+    <hr class="v3-rule">
+    <div class="v3-lead">
+      <div class="v3-byline">Breaking &middot; April 13</div>
+      <div class="v3-headline">Claude Code v2.1.105 Ships PreCompact Hooks, Enabling Plugins to Block Context Compaction</div>
+      <div class="v3-body">The latest release introduces a PreCompact lifecycle hook that gives plugins veto power over context window compaction. By returning exit code 2 or a JSON <code>{"decision":"block"}</code> response, hooks can prevent the system from discarding context prematurely. This is paired with background monitor support via a new <code>monitors</code> manifest key, auto-arming at session start. The EnterWorktree tool now accepts a path parameter for switching into existing worktrees. Additionally, <code>/proactive</code> becomes an alias for <code>/loop</code>, and stalled API streams abort after 5 minutes with automatic non-streaming retry.</div>
+    </div>
+    <div class="v3-grid">
+      <div class="v3-col">
+        <div class="v3-byline">Security &middot; April 10</div>
+        <div class="v3-headline">CVE-2026-35021: Command Injection in POSIX <code>which</code> Fallback Patched</div>
+        <div class="v3-body">v2.1.101 fixes a command injection vulnerability in the POSIX which fallback path. Also ships OS CA certificate store trust by default, eliminating enterprise TLS proxy setup friction.</div>
+        <div class="v3-sidebar">
+          <h4>This Week in Numbers</h4>
+          <ul>
+            <li>55+ releases since January</li>
+            <li>50+ security fixes shipped</li>
+            <li>97M total MCP ecosystem installs</li>
+            <li>140K GitHub stars on Claude Code</li>
+          </ul>
+        </div>
+      </div>
+      <div class="v3-divider"></div>
+      <div class="v3-col">
+        <div class="v3-byline">Cloud &middot; April 9</div>
+        <div class="v3-headline">Vertex AI Gets Interactive Setup Wizard</div>
+        <div class="v3-body">The login screen now includes an interactive Google Vertex AI configuration wizard, joining the existing Bedrock setup flow from v2.1.93. PID namespace subprocess sandboxing ships for Linux, and OTEL tracing propagates via TRACEPARENT injection.</div>
+      </div>
+      <div class="v3-divider"></div>
+      <div class="v3-col">
+        <div class="v3-byline">Ecosystem &middot; Trending</div>
+        <div class="v3-headline">Context7 Leads MCP Server Rankings at 52K Stars</div>
+        <div class="v3-body">Upstash's Context7 server holds the top spot by a 2x margin on FastMCP. Playwright MCP from Microsoft follows at 29.6K stars. The official GitHub MCP Server and Linear round out the top tier.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V4: GITHUB STYLE
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v4">
+  <div class="var-label">Variation 4 / 15 &mdash; GitHub Activity Style</div>
+  <div class="var-container">
+    <div class="v4-header">
+      <h1><span class="icon">CC</span> Claude Code Releases</h1>
+    </div>
+    <div class="v4-grid-wrap">
+      <div class="v4-grid-label">Release activity &mdash; Jan through Apr 2026</div>
+      <div class="v4-grid">
+        <!-- Simulated contribution grid -->
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell l3"></div><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l4"></div><div class="v4-cell l1"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l3"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l2"></div></div>
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l4"></div><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l3"></div><div class="v4-cell l2"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l4"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l3"></div></div>
+        <div class="v4-week"><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell l3"></div><div class="v4-cell"></div><div class="v4-cell l4"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l3"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell l1"></div></div>
+        <div class="v4-week"><div class="v4-cell l2"></div><div class="v4-cell l1"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l4"></div><div class="v4-cell l3"></div><div class="v4-cell"></div></div>
+        <div class="v4-week"><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell l1"></div><div class="v4-cell l3"></div><div class="v4-cell"></div><div class="v4-cell"></div><div class="v4-cell l2"></div></div>
+        <div class="v4-week"><div class="v4-cell l4"></div><div class="v4-cell"></div><div class="v4-cell l2"></div><div class="v4-cell"></div><div class="v4-cell l1"></div><div class="v4-cell l3"></div><div class="v4-cell l4"></div></div>
+      </div>
+    </div>
+    <ul class="v4-list">
+      <li class="v4-item">
+        <div class="v4-item-icon">+</div>
+        <div class="v4-item-content">
+          <div class="v4-item-head">
+            <span class="v4-item-ver">v2.1.105</span>
+            <span class="v4-item-title">PreCompact hooks, plugin monitors, EnterWorktree path</span>
+            <span class="v4-item-date">Apr 13</span>
+          </div>
+          <div class="v4-item-body">Hooks block compaction. Plugins ship monitors. /proactive aliases /loop.</div>
+        </div>
+      </li>
+      <li class="v4-item">
+        <div class="v4-item-icon">+</div>
+        <div class="v4-item-content">
+          <div class="v4-item-head">
+            <span class="v4-item-ver">v2.1.101</span>
+            <span class="v4-item-title">/team-onboarding, OS CA trust, CVE fix</span>
+            <span class="v4-item-date">Apr 10</span>
+          </div>
+          <div class="v4-item-body">Auto ramp-up guides. Enterprise TLS proxies work without setup.</div>
+        </div>
+      </li>
+      <li class="v4-item">
+        <div class="v4-item-icon">+</div>
+        <div class="v4-item-content">
+          <div class="v4-item-head">
+            <span class="v4-item-ver">v2.1.98</span>
+            <span class="v4-item-title">Vertex AI wizard, Monitor tool, subprocess sandbox</span>
+            <span class="v4-item-date">Apr 9</span>
+          </div>
+          <div class="v4-item-body">Interactive Vertex setup. PID namespace isolation on Linux.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V5: BENTO GRID
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v5">
+  <div class="var-label">Variation 5 / 15 &mdash; Bento Grid</div>
+  <div class="var-container var-wide">
+    <div class="v5-header">
+      <h1>Claude Code Timeline</h1>
+    </div>
+    <div class="v5-grid">
+      <div class="v5-card hero">
+        <div class="v5-card-ver">v2.1.105 &middot; Apr 13, 2026</div>
+        <div class="v5-card-title">PreCompact hooks give plugins veto power over context compaction</div>
+        <div class="v5-card-body">Hooks return exit code 2 to block compaction. Plugins ship background monitors via <code>monitors</code> manifest key. EnterWorktree accepts path parameter. /proactive aliases /loop.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span><span class="tag t-hooks">hooks</span><span class="tag t-plugin">plugins</span></div>
+      </div>
+      <div class="v5-card span2">
+        <div class="v5-card-ver">v2.1.101 &middot; Apr 10</div>
+        <div class="v5-card-title">/team-onboarding &amp; OS CA trust</div>
+        <div class="v5-card-body">Auto-generates teammate ramp-up guides. OS CA certs trusted by default. CVE-2026-35021 fixed.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span><span class="tag t-security">security</span></div>
+      </div>
+      <div class="v5-card">
+        <div class="v5-card-ver">v2.1.98 &middot; Apr 9</div>
+        <div class="v5-card-title">Vertex AI wizard</div>
+        <div class="v5-card-body">Interactive setup from login screen. Monitor tool ships.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span></div>
+      </div>
+      <div class="v5-card">
+        <div class="v5-card-ver">v2.1.93 &middot; Apr 4</div>
+        <div class="v5-card-title">Bedrock wizard, per-model costs</div>
+        <div class="v5-card-body">Interactive Bedrock setup. Cost breakdown per model. Write tool 60% faster.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span><span class="tag t-perf">perf</span></div>
+      </div>
+      <div class="v5-card">
+        <div class="v5-card-ver">v2.1.80 &middot; Mar 14</div>
+        <div class="v5-card-title">1M context GA</div>
+        <div class="v5-card-body">Opus 4.6 1M context window becomes generally available.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span></div>
+      </div>
+      <div class="v5-card span2">
+        <div class="v5-card-ver">v2.1.75 &middot; Mar 8</div>
+        <div class="v5-card-title">Auto Mode launch, CwdChanged hooks, transcript search</div>
+        <div class="v5-card-body">Fully autonomous mode with tool auto-approval. New hook events for directory changes and file changes. Search across all past transcripts.</div>
+        <div class="v5-card-tags"><span class="tag t-feature">feature</span><span class="tag t-hooks">hooks</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V6: TERMINAL / CLI
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v6">
+  <div class="var-label">Variation 6 / 15 &mdash; Terminal / CLI</div>
+  <div class="var-container">
+    <div class="v6-term">
+      <div class="v6-bar">
+        <div class="v6-dot r"></div>
+        <div class="v6-dot y"></div>
+        <div class="v6-dot g"></div>
+        <div class="v6-bar-title">claude-code-timeline &mdash; zsh</div>
+      </div>
+      <div class="v6-body">
+<span class="v6-prompt">$</span> <span class="v6-cmd">claude --changelog --since 2026-04-01</span>
+<br><br>
+<span class="v6-comment"># ── April 2026 ──────────────────────────────────</span>
+<br><br>
+<div class="v6-entry">
+<span class="v6-version">v2.1.105</span> <span class="v6-date">(Apr 13)</span> <span class="v6-feat">[MAJOR]</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> PreCompact hook: block compaction via exit code 2</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> Background monitors in plugin manifest</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> <span class="v6-highlight">EnterWorktree</span> now accepts <span class="v6-highlight">path</span> param</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> /proactive &rarr; alias for /loop</span>
+</div>
+<div class="v6-entry">
+<span class="v6-version">v2.1.101</span> <span class="v6-date">(Apr 10)</span> <span class="v6-feat">[MAJOR]</span> <span class="v6-sec">[CVE]</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> /team-onboarding: generate teammate ramp-up guides</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> OS CA cert store trusted by default</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> <span class="v6-sec">SECURITY:</span> command injection in POSIX which (CVE-2026-35021)</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> Memory leak fixed: historical message list copies</span>
+</div>
+<div class="v6-entry">
+<span class="v6-version">v2.1.98</span> <span class="v6-date">(Apr 9)</span> <span class="v6-feat">[MAJOR]</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> Interactive Vertex AI setup wizard</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> <span class="v6-highlight">Monitor</span> tool for streaming background events</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> PID namespace subprocess sandboxing (Linux)</span>
+<br><span class="v6-detail"><span class="v6-bullet">  &bull;</span> <span class="v6-sec">SECURITY:</span> Bash tool bypass fixes (backslash, /dev/tcp)</span>
+</div>
+<span class="v6-sep">───────────────────────────────────────────────────</span>
+<br><span class="v6-comment"># 55+ releases | 20+ major features | 50+ security fixes</span>
+<br><span class="v6-prompt">$</span> <span class="v6-cmd">_</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V7: MINIMAL LIST
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v7">
+  <div class="var-label">Variation 7 / 15 &mdash; Minimal List</div>
+  <div class="var-container">
+    <div class="v7-header">
+      <h1>Claude Code<br>Timeline</h1>
+      <div class="v7-sub">January &mdash; April 2026</div>
+    </div>
+    <div class="v7-month">April 2026</div>
+    <div class="v7-entry"><span class="v7-ver">2.1.105</span><span class="v7-title"><span class="v7-major-dot"></span>PreCompact hooks, plugin monitors, EnterWorktree path</span><span class="v7-date">Apr 13</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.101</span><span class="v7-title"><span class="v7-major-dot"></span>/team-onboarding, OS CA trust, CVE-2026-35021</span><span class="v7-date">Apr 10</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.98</span><span class="v7-title"><span class="v7-major-dot"></span>Vertex AI wizard, Monitor tool, subprocess sandboxing</span><span class="v7-date">Apr 9</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.97</span><span class="v7-title">NO_FLICKER focus view, Cedar syntax highlighting</span><span class="v7-date">Apr 8</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.95</span><span class="v7-title"><span class="v7-major-dot"></span>Amazon Bedrock Mantle, default effort raised to high</span><span class="v7-date">Apr 5</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.93</span><span class="v7-title"><span class="v7-major-dot"></span>Interactive Bedrock wizard, per-model costs, Write 60% faster</span><span class="v7-date">Apr 4</span></div>
+    <div class="v7-month">March 2026</div>
+    <div class="v7-entry"><span class="v7-ver">2.1.86</span><span class="v7-title">Source map leak &mdash; 512K lines of TypeScript exposed</span><span class="v7-date">Mar 27</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.80</span><span class="v7-title"><span class="v7-major-dot"></span>1M context GA for Opus 4.6, /color command</span><span class="v7-date">Mar 14</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.75</span><span class="v7-title"><span class="v7-major-dot"></span>Auto Mode launch, CwdChanged hooks, transcript search</span><span class="v7-date">Mar 8</span></div>
+    <div class="v7-entry"><span class="v7-ver">2.1.72</span><span class="v7-title"><span class="v7-major-dot"></span>Computer Use added (macOS research preview)</span><span class="v7-date">Mar 5</span></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V8: MAGAZINE SPREAD
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v8">
+  <div class="var-label">Variation 8 / 15 &mdash; Magazine Spread</div>
+  <div class="var-container var-wide">
+    <div class="v8-spread">
+      <div class="v8-main">
+        <div class="v8-hero">
+          <div class="v8-hero-label">Latest &middot; April 13, 2026</div>
+          <h2>Plugins Gain Compaction Veto Power in v2.1.105</h2>
+          <p>The PreCompact hook lets plugins block context window compaction by returning exit code 2 or a JSON decision payload. Combined with the new background monitor manifest key, this makes plugins first-class session citizens. The EnterWorktree tool now accepts a path parameter for switching into existing worktrees, and <code>/proactive</code> becomes an alias for <code>/loop</code>.</p>
+        </div>
+        <div class="v8-list">
+          <div class="v8-list-item">
+            <div class="v8-list-item-head"><span class="tag t-security" style="font-size:0.6rem">security</span></div>
+            <h3>/team-onboarding, OS CA Trust, CVE-2026-35021 &mdash; v2.1.101</h3>
+            <p>Command injection in POSIX which fallback patched. OS CA cert store now trusted by default for enterprise proxies.</p>
+          </div>
+          <div class="v8-list-item">
+            <h3>Vertex AI Wizard, Monitor Tool &mdash; v2.1.98</h3>
+            <p>Interactive Vertex setup from login. Monitor tool streams background events. PID namespace sandboxing.</p>
+          </div>
+          <div class="v8-list-item">
+            <h3>Auto Mode, CwdChanged Hooks &mdash; v2.1.75</h3>
+            <p>Fully autonomous mode with auto-approval. New hook events for directory and file changes.</p>
+          </div>
+        </div>
+      </div>
+      <div class="v8-sidebar">
+        <div class="v8-sidebar-section">
+          <h3>By the Numbers</h3>
+          <div class="v8-stat-row"><span>Total releases</span><span class="num">55+</span></div>
+          <div class="v8-stat-row"><span>Major features</span><span class="num">20+</span></div>
+          <div class="v8-stat-row"><span>Security fixes</span><span class="num">50+</span></div>
+          <div class="v8-stat-row"><span>MCP installs</span><span class="num">97M</span></div>
+        </div>
+        <div class="v8-sidebar-section">
+          <h3>Top Ecosystem</h3>
+          <div class="v8-sidebar-item"><div class="name">Context7</div><div class="desc">52.5K stars &middot; Version-specific docs injection</div></div>
+          <div class="v8-sidebar-item"><div class="name">Playwright MCP</div><div class="desc">29.6K stars &middot; Browser automation via a11y</div></div>
+          <div class="v8-sidebar-item"><div class="name">obra/superpowers</div><div class="desc">93K stars &middot; 14 agentic skills</div></div>
+          <div class="v8-sidebar-item"><div class="name">Cloudflare</div><div class="desc">Workers, Agents SDK integration</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V9: KANBAN COLUMNS
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v9">
+  <div class="var-label">Variation 9 / 15 &mdash; Kanban Board</div>
+  <div class="var-container var-wide">
+    <div class="v9-header"><h1>Claude Code Releases</h1></div>
+    <div class="v9-board">
+      <div class="v9-col">
+        <div class="v9-col-head">January<span class="v9-col-count">10</span></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.50</div><div class="v9-ticket-title">Task management with dependency tracking</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.52</div><div class="v9-ticket-title">Bash history autocomplete, plugin version pinning</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span><span class="tag t-plugin">plugins</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.55</div><div class="v9-ticket-title">--from-pr flag, PR-linked sessions</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+      </div>
+      <div class="v9-col">
+        <div class="v9-col-head">February<span class="v9-col-count">14</span></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.60</div><div class="v9-ticket-title">Claude Opus 4.6 launch, Agent Teams, auto-memory</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.63</div><div class="v9-ticket-title">Sonnet 4.6, SDK rate limit events</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.68</div><div class="v9-ticket-title">Auto-memory, /copy picker</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+      </div>
+      <div class="v9-col">
+        <div class="v9-col-head">March<span class="v9-col-count">18</span></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.75</div><div class="v9-ticket-title">Auto Mode, CwdChanged hooks, transcript search</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span><span class="tag t-hooks">hooks</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.80</div><div class="v9-ticket-title">1M context GA, /color</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.72</div><div class="v9-ticket-title">Computer Use (macOS preview)</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span></div></div>
+      </div>
+      <div class="v9-col">
+        <div class="v9-col-head">April<span class="v9-col-count">12</span></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.105</div><div class="v9-ticket-title">PreCompact hooks, plugin monitors</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span><span class="tag t-hooks">hooks</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.101</div><div class="v9-ticket-title">/team-onboarding, CVE fix</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span><span class="tag t-security">security</span></div></div>
+        <div class="v9-ticket"><div class="v9-ticket-ver">v2.1.98</div><div class="v9-ticket-title">Vertex AI wizard, Monitor tool</div><div class="v9-ticket-tags"><span class="tag t-feature">feature</span><span class="tag t-mcp">mcp</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V10: HORIZONTAL SCROLL
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v10">
+  <div class="var-label">Variation 10 / 15 &mdash; Horizontal Scroll</div>
+  <div class="var-container var-wide">
+    <div class="v10-header"><h1>Claude Code Releases &rarr;</h1></div>
+    <div class="v10-scroll-wrap">
+      <div class="v10-track">
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.50</div><div class="v10-card-title">Task management with dependencies</div><div class="v10-card-date">Jan 16</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card"><div class="v10-card-ver">v2.1.55</div><div class="v10-card-title">--from-pr flag</div><div class="v10-card-date">Jan 24</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.60</div><div class="v10-card-title">Opus 4.6 launch, Agent Teams</div><div class="v10-card-date">Feb 7</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card"><div class="v10-card-ver">v2.1.63</div><div class="v10-card-title">Sonnet 4.6 launch</div><div class="v10-card-date">Feb 12</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.72</div><div class="v10-card-title">Computer Use (macOS)</div><div class="v10-card-date">Mar 5</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.75</div><div class="v10-card-title">Auto Mode launch</div><div class="v10-card-date">Mar 8</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.80</div><div class="v10-card-title">1M context GA</div><div class="v10-card-date">Mar 14</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.98</div><div class="v10-card-title">Vertex AI wizard</div><div class="v10-card-date">Apr 9</div></div></div>
+        <div class="v10-node"><div class="v10-dot"></div><div class="v10-card major"><div class="v10-card-ver">v2.1.105</div><div class="v10-card-title">PreCompact hooks</div><div class="v10-card-date">Apr 13</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V11: ACCORDION
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v11">
+  <div class="var-label">Variation 11 / 15 &mdash; Accordion</div>
+  <div class="var-container">
+    <div class="v11-header"><h1>Claude Code Timeline</h1></div>
+    <details open>
+      <summary>April 2026 <span class="v11-count">12 releases</span></summary>
+      <div class="v11-content">
+        <div class="v11-row"><span class="v11-row-ver">v2.1.105</span><div class="v11-row-sig major"></div><span class="v11-row-title">PreCompact hooks, plugin monitors, EnterWorktree path</span><span class="v11-row-date">Apr 13</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.101</span><div class="v11-row-sig major"></div><span class="v11-row-title">/team-onboarding, OS CA trust, CVE-2026-35021</span><span class="v11-row-date">Apr 10</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.98</span><div class="v11-row-sig major"></div><span class="v11-row-title">Vertex AI wizard, Monitor tool, subprocess sandbox</span><span class="v11-row-date">Apr 9</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.97</span><div class="v11-row-sig notable"></div><span class="v11-row-title">NO_FLICKER focus view, Cedar syntax highlighting</span><span class="v11-row-date">Apr 8</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.93</span><div class="v11-row-sig major"></div><span class="v11-row-title">Interactive Bedrock wizard, per-model costs</span><span class="v11-row-date">Apr 4</span></div>
+      </div>
+    </details>
+    <details>
+      <summary>March 2026 <span class="v11-count">18 releases</span></summary>
+      <div class="v11-content">
+        <div class="v11-row"><span class="v11-row-ver">v2.1.86</span><div class="v11-row-sig notable"></div><span class="v11-row-title">Source map leak &mdash; 512K lines exposed</span><span class="v11-row-date">Mar 27</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.80</span><div class="v11-row-sig major"></div><span class="v11-row-title">1M context GA for Opus 4.6</span><span class="v11-row-date">Mar 14</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.75</span><div class="v11-row-sig major"></div><span class="v11-row-title">Auto Mode launch, CwdChanged hooks</span><span class="v11-row-date">Mar 8</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.72</span><div class="v11-row-sig major"></div><span class="v11-row-title">Computer Use (macOS research preview)</span><span class="v11-row-date">Mar 5</span></div>
+      </div>
+    </details>
+    <details>
+      <summary>February 2026 <span class="v11-count">14 releases</span></summary>
+      <div class="v11-content">
+        <div class="v11-row"><span class="v11-row-ver">v2.1.68</span><div class="v11-row-sig major"></div><span class="v11-row-title">Auto-memory, /copy picker</span><span class="v11-row-date">Feb 22</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.63</span><div class="v11-row-sig major"></div><span class="v11-row-title">Sonnet 4.6 launch</span><span class="v11-row-date">Feb 12</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.60</span><div class="v11-row-sig major"></div><span class="v11-row-title">Opus 4.6, Agent Teams, auto-memory</span><span class="v11-row-date">Feb 7</span></div>
+      </div>
+    </details>
+    <details>
+      <summary>January 2026 <span class="v11-count">10 releases</span></summary>
+      <div class="v11-content">
+        <div class="v11-row"><span class="v11-row-ver">v2.1.55</span><div class="v11-row-sig notable"></div><span class="v11-row-title">--from-pr flag, PR-linked sessions</span><span class="v11-row-date">Jan 24</span></div>
+        <div class="v11-row"><span class="v11-row-ver">v2.1.50</span><div class="v11-row-sig major"></div><span class="v11-row-title">Task management with dependency tracking</span><span class="v11-row-date">Jan 16</span></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V12: DATABASE TABLE
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v12">
+  <div class="var-label">Variation 12 / 15 &mdash; Database Table (Notion-style)</div>
+  <div class="var-container var-wide">
+    <div class="v12-header"><span class="v12-icon">&#9783;</span><h1>Claude Code Releases</h1></div>
+    <div class="v12-toolbar">
+      <button>Filter</button>
+      <button>Sort</button>
+      <button>Group by: Month</button>
+    </div>
+    <table class="v12-table">
+      <thead>
+        <tr><th>Version</th><th>Date</th><th>Title</th><th>Significance</th><th>Tags</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="ver">v2.1.105</td><td>Apr 13</td><td>PreCompact hooks, plugin monitors, EnterWorktree path</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span> <span class="tag t-hooks">hooks</span></td></tr>
+        <tr><td class="ver">v2.1.101</td><td>Apr 10</td><td>/team-onboarding, OS CA trust, CVE-2026-35021</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span> <span class="tag t-security">security</span></td></tr>
+        <tr><td class="ver">v2.1.98</td><td>Apr 9</td><td>Vertex AI wizard, Monitor tool, subprocess sandboxing</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span> <span class="tag t-mcp">mcp</span></td></tr>
+        <tr><td class="ver">v2.1.97</td><td>Apr 8</td><td>NO_FLICKER focus view, Cedar syntax highlighting</td><td><span class="sig-pill notable">Notable</span></td><td><span class="tag t-feature">feature</span></td></tr>
+        <tr><td class="ver">v2.1.95</td><td>Apr 5</td><td>Amazon Bedrock Mantle, default effort raised</td><td><span class="sig-pill notable">Notable</span></td><td><span class="tag t-feature">feature</span></td></tr>
+        <tr><td class="ver">v2.1.93</td><td>Apr 4</td><td>Interactive Bedrock wizard, per-model costs</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span> <span class="tag t-perf">perf</span></td></tr>
+        <tr><td class="ver">v2.1.80</td><td>Mar 14</td><td>1M context GA, /color command</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span></td></tr>
+        <tr><td class="ver">v2.1.75</td><td>Mar 8</td><td>Auto Mode, CwdChanged hooks, transcript search</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span> <span class="tag t-hooks">hooks</span></td></tr>
+        <tr><td class="ver">v2.1.72</td><td>Mar 5</td><td>Computer Use (macOS research preview)</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span></td></tr>
+        <tr><td class="ver">v2.1.60</td><td>Feb 7</td><td>Opus 4.6 launch, Agent Teams, auto-memory</td><td><span class="sig-pill major">Major</span></td><td><span class="tag t-feature">feature</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V13: APPLE KEYNOTE
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v13">
+  <div class="var-label">Variation 13 / 15 &mdash; Apple Keynote Style</div>
+  <div class="var-container">
+    <div class="v13-header">
+      <h1>Claude Code</h1>
+      <p>3 months. 55 releases. Relentless.</p>
+    </div>
+    <div class="v13-hero-card">
+      <div class="v13-label">Most Recent</div>
+      <h2>PreCompact Hooks</h2>
+      <p>Plugins now have veto power over context compaction. Return exit code 2 to block. Background monitors auto-arm at session start. This is the plugin system growing up.</p>
+      <div class="v13-date">v2.1.105 &middot; April 13, 2026</div>
+    </div>
+    <div class="v13-sm-grid">
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.101</div>
+        <h3>/team-onboarding</h3>
+        <p>Auto-generates teammate ramp-up guides from your local usage patterns.</p>
+      </div>
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.98</div>
+        <h3>Vertex AI Wizard</h3>
+        <p>Interactive Google Cloud setup right from the login screen.</p>
+      </div>
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.93</div>
+        <h3>Per-Model Costs</h3>
+        <p>See exactly what each model costs. Write tool 60% faster.</p>
+      </div>
+    </div>
+    <div class="v13-hero-card" style="margin-top:16px">
+      <div class="v13-label">Landmark</div>
+      <h2>1 Million Token Context</h2>
+      <p>Opus 4.6's 1M context window moved from preview to general availability. Hold your entire codebase in a single conversation.</p>
+      <div class="v13-date">v2.1.80 &middot; March 14, 2026</div>
+    </div>
+    <div class="v13-sm-grid">
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.75</div>
+        <h3>Auto Mode</h3>
+        <p>Fully autonomous with tool auto-approval. Set it and walk away.</p>
+      </div>
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.72</div>
+        <h3>Computer Use</h3>
+        <p>macOS research preview. Claude can see and interact with your screen.</p>
+      </div>
+      <div class="v13-sm-card">
+        <div class="v13-sm-ver">v2.1.60</div>
+        <h3>Opus 4.6 Launch</h3>
+        <p>New model, Agent Teams preview, auto-memory all in one drop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V14: SOCIAL FEED
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v14">
+  <div class="var-label">Variation 14 / 15 &mdash; Social Feed</div>
+  <div class="var-container">
+    <div class="v14-feed">
+      <div class="v14-header"><h1>Claude Code Feed</h1></div>
+      <div class="v14-post">
+        <div class="v14-post-head">
+          <div class="v14-avatar">CC</div>
+          <div><div class="v14-post-author">Claude Code</div><div class="v14-post-handle">@claudecode</div></div>
+          <div class="v14-post-date">Apr 13</div>
+        </div>
+        <div class="v14-post-body">
+          <strong>v2.1.105 just dropped.</strong> Plugins can now block context compaction via PreCompact hooks. Background monitors auto-arm at session start. <code>EnterWorktree</code> accepts a <code>path</code> param. <code>/proactive</code> is now an alias for <code>/loop</code>.
+        </div>
+        <div class="v14-post-tags"><span class="tag t-feature">feature</span><span class="tag t-hooks">hooks</span><span class="tag t-plugin">plugins</span></div>
+        <div class="v14-post-reactions">
+          <span>&#9829; 342</span>
+          <span>&#8635; 89</span>
+          <span>&#9733; Major</span>
+        </div>
+      </div>
+      <div class="v14-post">
+        <div class="v14-post-head">
+          <div class="v14-avatar">CC</div>
+          <div><div class="v14-post-author">Claude Code</div><div class="v14-post-handle">@claudecode</div></div>
+          <div class="v14-post-date">Apr 10</div>
+        </div>
+        <div class="v14-post-body">
+          <strong>v2.1.101 &mdash; enterprise love.</strong> OS CA cert store trusted by default. No more TLS proxy headaches. <code>/team-onboarding</code> generates ramp-up guides. Also fixed CVE-2026-35021 (command injection in POSIX <code>which</code>).
+        </div>
+        <div class="v14-post-tags"><span class="tag t-feature">feature</span><span class="tag t-security">security</span></div>
+        <div class="v14-post-reactions">
+          <span>&#9829; 218</span>
+          <span>&#8635; 56</span>
+          <span>&#9733; Major</span>
+        </div>
+      </div>
+      <div class="v14-post">
+        <div class="v14-post-head">
+          <div class="v14-avatar">CC</div>
+          <div><div class="v14-post-author">Claude Code</div><div class="v14-post-handle">@claudecode</div></div>
+          <div class="v14-post-date">Apr 9</div>
+        </div>
+        <div class="v14-post-body">
+          <strong>v2.1.98.</strong> Interactive Vertex AI setup wizard from the login screen. New <code>Monitor</code> tool streams events from background scripts. PID namespace sandboxing on Linux. Multiple Bash security bypass vectors patched.
+        </div>
+        <div class="v14-post-tags"><span class="tag t-feature">feature</span><span class="tag t-mcp">mcp</span><span class="tag t-security">security</span></div>
+        <div class="v14-post-reactions">
+          <span>&#9829; 187</span>
+          <span>&#8635; 43</span>
+          <span>&#9733; Major</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     V15: CHANGELOG / MARKDOWN
+     ═══════════════════════════════════════════ -->
+<section class="variation" id="v15">
+  <div class="var-label">Variation 15 / 15 &mdash; Changelog (Dev Style)</div>
+  <div class="var-container">
+    <div class="v15-doc">
+      <div class="v15-header">
+        <h1>CHANGELOG</h1>
+        <div class="v15-badges">
+          <span class="v15-badge green">55+ releases</span>
+          <span class="v15-badge blue">v2.1.9 &mdash; v2.1.105</span>
+          <span class="v15-badge">Jan &mdash; Apr 2026</span>
+        </div>
+      </div>
+
+      <div class="v15-section">
+        <h2>April 2026 <span class="v15-h2-date">12 releases</span></h2>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.105</span><span class="v15-ver-title">&mdash; PreCompact hooks, plugin monitors</span></div>
+          <ul class="v15-ver-list">
+            <li><code>path</code> parameter on <code>EnterWorktree</code> &mdash; switch into existing worktrees</li>
+            <li><strong>PreCompact hook</strong>: hooks can block compaction (exit code 2 or JSON decision)</li>
+            <li>Background monitor support for plugins via <code>monitors</code> manifest key</li>
+            <li><code>/proactive</code> is now an alias for <code>/loop</code></li>
+            <li>Stalled API streams abort after 5 min and retry non-streaming</li>
+          </ul>
+        </div>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.101</span><span class="v15-ver-title">&mdash; /team-onboarding, OS CA trust</span></div>
+          <ul class="v15-ver-list">
+            <li><code>/team-onboarding</code> generates teammate ramp-up guide from local usage</li>
+            <li>OS CA certificate store trusted by default &mdash; enterprise TLS proxies work without setup</li>
+            <li><strong>Security</strong>: fixed command injection in POSIX <code>which</code> fallback (CVE-2026-35021)</li>
+            <li>Fixed memory leak: long sessions retained dozens of historical message list copies</li>
+          </ul>
+        </div>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.98</span><span class="v15-ver-title">&mdash; Vertex AI wizard, Monitor tool</span></div>
+          <ul class="v15-ver-list">
+            <li>Interactive Google Vertex AI setup wizard from login screen</li>
+            <li><strong>Monitor tool</strong> for streaming events from background scripts</li>
+            <li>Subprocess sandboxing with PID namespace isolation on Linux</li>
+            <li><strong>Security</strong>: fixed Bash tool bypass vectors</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="v15-section">
+        <h2>March 2026 <span class="v15-h2-date">18 releases</span></h2>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.80</span><span class="v15-ver-title">&mdash; 1M context GA</span></div>
+          <ul class="v15-ver-list">
+            <li>Opus 4.6 1M context window moves from preview to general availability</li>
+            <li><code>/color</code> command for terminal color theme customization</li>
+          </ul>
+        </div>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.75</span><span class="v15-ver-title">&mdash; Auto Mode launch</span></div>
+          <ul class="v15-ver-list">
+            <li>Fully autonomous mode with tool auto-approval</li>
+            <li><code>CwdChanged</code> and <code>FileChanged</code> hook events</li>
+            <li>Search across all past transcripts</li>
+          </ul>
+        </div>
+        <div class="v15-ver-block">
+          <div class="v15-ver-head"><span class="v15-ver-num">v2.1.72</span><span class="v15-ver-title">&mdash; Computer Use (macOS preview)</span></div>
+          <ul class="v15-ver-list">
+            <li>Claude can see and interact with your screen &mdash; macOS research preview</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+</body>
+</html>

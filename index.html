@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claude Code Timeline — 3 Months of Features & Releases</title>
+<title>Agentic Coding News</title>
 <style>
   :root {
     --bg: #0a0a0f;
@@ -72,34 +72,6 @@
     font-size: 0.85rem;
     margin-top: 4px;
     opacity: 0.7;
-  }
-
-  /* Stats bar */
-  .stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    padding: 18px 0;
-    margin-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
-
-  .stat {
-    text-align: center;
-  }
-
-  .stat-num {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
 
   /* Filters */
@@ -456,23 +428,16 @@
 
 <div class="container">
   <header>
-    <h1>Claude Code Timeline</h1>
+    <h1>Agentic Coding News</h1>
     <p class="subtitle">Every official feature, release, and update</p>
-    <p class="period">January 16 &mdash; April 14, 2026 &middot; v2.1.9 &mdash; v2.1.105</p>
+    <p class="period">Jan 16, 2026 &mdash; Apr 15, 2026 &middot; v2.1.9 &mdash; v2.1.109</p>
   </header>
-
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-num">52+</div><div class="stat-label">Releases</div></div>
-    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months</div></div>
-    <div class="stat"><div class="stat-num">25+</div><div class="stat-label">Major Features</div></div>
-    <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Security Fixes</div></div>
-  </div>
 
   <div class="filters">
     <button class="filter-btn active" data-filter="all">All</button>
     <button class="filter-btn" data-filter="feature">Features</button>
     <button class="filter-btn" data-filter="security">Security</button>
-    <button class="filter-btn" data-filter="plugin">Plugins & Skills</button>
+    <button class="filter-btn" data-filter="plugin">Plugins &amp; Skills</button>
     <button class="filter-btn" data-filter="mcp">MCP</button>
     <button class="filter-btn" data-filter="hooks">Hooks</button>
     <button class="filter-btn" data-filter="ide">IDE</button>
@@ -494,9 +459,89 @@
 
   <div class="timeline" id="timeline">
 
-
     <!-- =================== APRIL 2026 =================== -->
     <div class="month-sep"><span>April 2026</span></div>
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.109</span>
+          <span class="entry-date">Apr 15, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Extended-thinking indicator with rotating progress hint</div>
+        <div class="entry-body">
+          <ul>
+            <li>Improved the extended-thinking indicator with a rotating progress hint during long thinking operations</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.108</span>
+          <span class="entry-date">Apr 14, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">1-hour prompt cache opt-in, /recap feature, slash command discovery by model, 20+ fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>ENABLE_PROMPT_CACHING_1H</code> env var to opt into 1-hour prompt cache TTL on API key, Bedrock, Vertex, and Foundry; <code>FORCE_PROMPT_CACHING_5M</code> to force 5-minute TTL (<code>ENABLE_PROMPT_CACHING_1H_BEDROCK</code> deprecated but honored)</li>
+            <li><strong>Recap feature</strong>: <code>/recap</code> command provides context when returning to a session; configurable in <code>/config</code>; force with <code>CLAUDE_CODE_ENABLE_AWAY_SUMMARY</code> if telemetry disabled</li>
+            <li><strong>Model can now discover and invoke built-in slash commands</strong> like <code>/init</code>, <code>/review</code>, and <code>/security-review</code> via the Skill tool</li>
+            <li><code>/undo</code> is now an alias for <code>/rewind</code></li>
+            <li>Improved <code>/model</code> to warn before switching models mid-conversation (next response re-reads full history uncached)</li>
+            <li>Improved <code>/resume</code> picker defaults to sessions from the current directory; press <code>Ctrl+A</code> to show all projects</li>
+            <li>Improved error messages: server rate limits distinguished from plan usage limits; 5xx/529 errors show link to status.claude.com; unknown slash commands suggest closest match</li>
+            <li>Reduced memory footprint for file reads, edits, and syntax highlighting by loading language grammars on demand</li>
+            <li>Added "verbose" indicator when viewing detailed transcript (<code>Ctrl+O</code>)</li>
+            <li>Added startup warning when prompt caching is disabled via <code>DISABLE_PROMPT_CACHING*</code> env vars</li>
+            <li>Fixed paste not working in the <code>/login</code> code prompt (regression in v2.1.105)</li>
+            <li>Fixed subscribers with <code>DISABLE_TELEMETRY</code> falling back to 5-minute prompt cache TTL instead of 1 hour</li>
+            <li>Fixed Agent tool prompting for permission in auto mode when safety classifier's transcript exceeded context window</li>
+            <li>Fixed Bash tool producing no output when <code>CLAUDE_ENV_FILE</code> (e.g. <code>~/.zprofile</code>) ends with a <code>#</code> comment line</li>
+            <li>Fixed <code>claude --resume &lt;session-id&gt;</code> losing the session's custom name and color set via <code>/rename</code></li>
+            <li>Fixed session titles showing placeholder example text when first message is a short greeting</li>
+            <li>Fixed terminal escape codes appearing as garbage text in prompt input after <code>--teleport</code></li>
+            <li>Fixed <code>/feedback</code> retry: pressing Enter to resubmit after failure now works without editing description first</li>
+            <li>Fixed <code>--teleport</code> and <code>--resume &lt;id&gt;</code> precondition errors (e.g. dirty git tree, session not found) exiting silently</li>
+            <li>Fixed Remote Control session titles set in web UI being overwritten by auto-generated titles after third message</li>
+            <li>Fixed <code>--resume</code> truncating sessions when transcript contained a self-referencing message</li>
+            <li>Fixed transcript write failures (e.g., disk full) being silently dropped instead of logged</li>
+            <li>Fixed diacritical marks (accents, umlauts, cedillas) dropped from responses when <code>language</code> setting configured</li>
+            <li>Fixed policy-managed plugins never auto-updating when running from a different project than where first installed</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">perf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.107</span>
+          <span class="entry-date">Apr 14, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Thinking hints shown sooner during long operations</div>
+        <div class="entry-body">
+          <ul>
+            <li>Show thinking hints sooner during long operations — reduces perceived wait time</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
 
     <div class="entry" data-sig="major" data-tags="feature,hooks,plugin">
       <div class="entry-card">
@@ -515,7 +560,7 @@
             <li>Stalled API streams abort after 5 min and retry non-streaming</li>
             <li><code>/doctor</code> now has status icons; press <code>f</code> to auto-fix issues</li>
             <li>Skill description cap raised from 250 to 1,536 characters</li>
-            <li><code>WebFetch</code> strips <code><style></code> and <code><script></code> from fetched pages</li>
+            <li><code>WebFetch</code> strips <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code> from fetched pages</li>
             <li>Fixed leading whitespace trimmed from assistant messages (broke ASCII art)</li>
           </ul>
         </div>
@@ -526,6 +571,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,security,ide">
       <div class="entry-card">
         <div class="entry-header">
@@ -554,6 +600,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,security,mcp">
       <div class="entry-card">
         <div class="entry-header">
@@ -580,6 +627,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -603,6 +651,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="security">
       <div class="entry-card">
         <div class="entry-header">
@@ -616,6 +665,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -641,6 +691,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -663,10 +714,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,mcp,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -691,6 +743,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -712,6 +765,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -761,6 +815,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -774,6 +829,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -781,7 +837,7 @@
           <span class="entry-date">Mar 27, 2026</span>
           <span class="entry-sig sig-minor">Minor</span>
         </div>
-        <div class="entry-title">Session-Id header, Jujutsu & Sapling VCS support</div>
+        <div class="entry-title">Session-Id header, Jujutsu &amp; Sapling VCS support</div>
         <div class="entry-body">
           <ul>
             <li><code>X-Claude-Code-Session-Id</code> header on all API requests (allows proxy aggregation without body parsing)</li>
@@ -793,6 +849,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks,ide">
       <div class="entry-card">
         <div class="entry-header">
@@ -809,7 +866,7 @@
             <li><code>TaskCreated</code> hook; <code>WorktreeCreate</code> HTTP hook with <code>worktreePath</code></li>
             <li><code>allowedChannelPlugins</code> managed setting</li>
             <li>Idle-return prompt after 75+ minute gaps</li>
-            <li>Tokens ≥1M display as "1.5m" etc.</li>
+            <li>Tokens &ge;1M display as "1.5m" etc.</li>
             <li><strong>VSCode</strong>: rate limit warning with percentage/reset time</li>
           </ul>
         </div>
@@ -820,6 +877,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="mcp,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -842,6 +900,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -868,6 +927,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -887,6 +947,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -905,10 +966,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,ide">
       <div class="entry-card">
         <div class="entry-header">
@@ -930,6 +992,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,hooks,security">
       <div class="entry-card">
         <div class="entry-header">
@@ -955,6 +1018,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,security">
       <div class="entry-card">
         <div class="entry-header">
@@ -976,6 +1040,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1000,6 +1065,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1021,10 +1087,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,mcp,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1046,10 +1113,11 @@
         <div class="tags">
           <span class="tag tag-feature">feature</span>
           <span class="tag tag-mcp">mcp</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1069,10 +1137,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -1100,6 +1169,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1123,6 +1193,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,ide,mcp,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -1151,6 +1222,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1164,6 +1236,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1201,6 +1274,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -1208,11 +1282,11 @@
           <span class="entry-date">Feb 28, 2026</span>
           <span class="entry-sig sig-major">Major</span>
         </div>
-        <div class="entry-title">HTTP hooks, /simplify & /batch commands, auto memory across worktrees, 13 memory leak fixes</div>
+        <div class="entry-title">HTTP hooks, /simplify &amp; /batch commands, auto memory across worktrees, 13 memory leak fixes</div>
         <div class="entry-body">
           <ul>
             <li><code>/simplify</code> and <code>/batch</code> bundled slash commands</li>
-            <li>Project configs & auto memory now shared across git worktrees of same repo</li>
+            <li>Project configs &amp; auto memory now shared across git worktrees of same repo</li>
             <li><strong>HTTP hooks</strong> — POST JSON to a URL and receive JSON instead of running a shell command</li>
             <li>"Always copy full response" option in <code>/copy</code> picker</li>
             <li><code>ENABLE_CLAUDEAI_MCP_SERVERS=false</code> to opt out of claude.ai MCP servers</li>
@@ -1227,6 +1301,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1248,6 +1323,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1261,6 +1337,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks,security,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -1277,7 +1354,7 @@
             <li>BashTool skips login shell by default when shell snapshot available (performance)</li>
             <li><code>/model</code> picker shows human-readable labels instead of raw model IDs</li>
             <li><strong>Security</strong>: statusLine/fileSuggestion hook commands could execute without workspace trust; HTTP hooks could interpolate arbitrary env vars (now requires <code>allowedEnvVars</code>)</li>
-            <li>Tool results >50K chars persisted to disk (was 100K)</li>
+            <li>Tool results &gt;50K chars persisted to disk (was 100K)</li>
           </ul>
         </div>
         <div class="tags">
@@ -1288,6 +1365,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1312,10 +1390,11 @@
         <div class="tags">
           <span class="tag tag-feature">feature</span>
           <span class="tag tag-hooks">hooks</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -1339,6 +1418,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1359,10 +1439,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1385,6 +1466,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1406,6 +1488,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,security">
       <div class="entry-card">
         <div class="entry-header">
@@ -1427,6 +1510,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1440,6 +1524,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -1462,6 +1547,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1484,6 +1570,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,mcp">
       <div class="entry-card">
         <div class="entry-header">
@@ -1532,6 +1619,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,perf">
       <div class="entry-card">
         <div class="entry-header">
@@ -1550,10 +1638,11 @@
         </div>
         <div class="tags">
           <span class="tag tag-feature">feature</span>
-          <span class="tag tag-perf">performance</span>
+          <span class="tag tag-perf">perf</span>
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,ide">
       <div class="entry-card">
         <div class="entry-header">
@@ -1580,6 +1669,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature">
       <div class="entry-card">
         <div class="entry-header">
@@ -1600,6 +1690,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="major" data-tags="feature,ide">
       <div class="entry-card">
         <div class="entry-header">
@@ -1622,6 +1713,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,plugin">
       <div class="entry-card">
         <div class="entry-header">
@@ -1644,6 +1736,7 @@
         </div>
       </div>
     </div>
+
     <div class="entry" data-sig="notable" data-tags="feature,mcp,hooks">
       <div class="entry-card">
         <div class="entry-header">
@@ -1671,10 +1764,10 @@
 
   </div>
 
-  
+
   <div class="plugins-section">
-    <h2>Popular Plugins, Skills & Ecosystem</h2>
-    <p class="section-sub">Most-installed official skills, community collections, and agentic frameworks (as of April 2026)</p>
+    <h2>Ecosystem</h2>
+    <p class="section-sub">Official skills, community plugins, MCP servers, and agentic frameworks</p>
 
     <div class="plugin-category-title">Official Anthropic Skills</div>
     <div class="plugin-grid">
@@ -1710,13 +1803,14 @@
         <div class="plugin-desc">Bootstrap new skills from a template.</div>
       </div>
     </div>
+
     <div class="plugin-category-title">Community Collections</div>
     <div class="plugin-grid">
       <div class="plugin-card">
         <div class="plugin-name">obra/superpowers</div>
         <div class="plugin-author">Jesse Vincent (Prime Radiant)</div>
         <div class="plugin-desc">14 agentic skills forcing 5-phase discipline: clarify, design, plan, code, verify. Includes brainstorming, TDD, git-worktrees, subagent-driven development.</div>
-        <div class="plugin-stat">~93,000 GitHub stars · Official listing at claude.com/plugins/superpowers</div>
+        <div class="plugin-stat">~93,000 GitHub stars &middot; Official listing at claude.com/plugins/superpowers</div>
       </div>
       <div class="plugin-card">
         <div class="plugin-name">everything-claude-code</div>
@@ -1731,6 +1825,7 @@
         <div class="plugin-stat">~5,200 GitHub stars</div>
       </div>
     </div>
+
     <div class="plugin-category-title">Top MCP Servers</div>
     <div class="plugin-grid">
       <div class="plugin-card">
@@ -1767,6 +1862,7 @@
         <div class="plugin-desc">Create issues, manage projects, update statuses from Claude Code.</div>
       </div>
     </div>
+
     <div class="plugin-category-title">Official Partner Plugins</div>
     <div class="plugin-grid">
       <div class="plugin-card">
@@ -1790,18 +1886,19 @@
         <div class="plugin-desc">Content management, media asset management, transformations, and optimization.</div>
       </div>
     </div>
+
     <div class="plugin-category-title">Agentic Coding</div>
     <div class="plugin-grid">
       <div class="plugin-card">
         <div class="plugin-name">GasTown</div>
         <div class="plugin-author">Steve Yegge (gastownhall)</div>
         <div class="plugin-desc">Multi-agent workspace manager for Claude Code, Copilot, Codex, Gemini. Go-based with Mayor/Polecats/Convoys architecture.</div>
-        <div class="plugin-stat">~13,531</div>
+        <div class="plugin-stat">~13,531 GitHub stars</div>
       </div>
       <div class="plugin-card">
         <div class="plugin-name">awesome-claude-code-subagents</div>
         <div class="plugin-author">VoltAgent</div>
-        <div class="plugin-desc">100+ specialized subagent definitions as templates</div>
+        <div class="plugin-desc">100+ specialized subagent definitions as templates.</div>
       </div>
       <div class="plugin-card">
         <div class="plugin-name">Claude Code Agent Teams</div>
@@ -1812,8 +1909,8 @@
   </div>
 
   <footer>
-    <p>Claude Code Timeline &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
-    <p>Last updated: April 15, 2026 &middot; v2.1.9 through v2.1.105</p>
+    <p>Agentic Coding News &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
+    <p>Last updated: April 15, 2026 &middot; v2.1.9 through v2.1.109</p>
   </footer>
 </div>
 

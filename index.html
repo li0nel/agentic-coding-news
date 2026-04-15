@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Timeline — 3 Months of Features & Releases</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a25;
+    --border: #2a2a3a;
+    --text: #e4e4ed;
+    --text-muted: #8888a0;
+    --accent: #d4a574;
+    --accent2: #7c9de0;
+    --accent3: #6bc9a0;
+    --red: #e07070;
+    --purple: #b08cdb;
+    --orange: #e0a050;
+    --tag-feature: #d4a574;
+    --tag-security: #e07070;
+    --tag-plugin: #b08cdb;
+    --tag-mcp: #7c9de0;
+    --tag-hooks: #6bc9a0;
+    --tag-ide: #e0a050;
+    --tag-perf: #88b8d0;
+    --tag-agentic: #d47ca0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  header {
+    padding: 60px 0 30px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  header .period {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 18px 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 0 10px;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    color: #0a0a0f;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .filter-btn[data-filter="security"].active { background: var(--tag-security); }
+  .filter-btn[data-filter="plugin"].active { background: var(--tag-plugin); }
+  .filter-btn[data-filter="mcp"].active { background: var(--tag-mcp); }
+  .filter-btn[data-filter="hooks"].active { background: var(--tag-hooks); }
+  .filter-btn[data-filter="ide"].active { background: var(--tag-ide); }
+  .filter-btn[data-filter="perf"].active { background: var(--tag-perf); }
+  .filter-btn[data-filter="agentic"].active { background: var(--tag-agentic); }
+
+  /* Significance filter */
+  .sig-filters {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .sig-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .sig-btn:hover { border-color: var(--accent2); color: var(--text); }
+  .sig-btn.active { background: var(--accent2); color: #0a0a0f; border-color: var(--accent2); font-weight: 600; }
+
+  /* Search */
+  .search-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .search-box input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  /* Month separator */
+  .month-sep {
+    text-align: center;
+    padding: 24px 0 16px;
+    position: relative;
+  }
+
+  .month-sep::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .month-sep span {
+    background: var(--bg);
+    padding: 4px 20px;
+    position: relative;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--border) 20%, var(--border) 80%, transparent);
+  }
+
+  .entry {
+    position: relative;
+    margin-bottom: 20px;
+    transition: opacity 0.3s;
+  }
+
+  .entry.hidden { display: none; }
+
+  .entry::before {
+    content: '';
+    position: absolute;
+    left: -23px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--bg);
+    z-index: 1;
+  }
+
+  .entry[data-sig="major"]::before { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .entry[data-sig="notable"]::before { background: var(--accent2); }
+
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .entry[data-sig="major"] .entry-card { border-color: rgba(212, 165, 116, 0.3); }
+
+  .entry-card:hover { border-color: var(--accent); }
+
+  .entry-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .entry-version {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: rgba(212, 165, 116, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .entry-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .entry-sig {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1px 8px;
+    border-radius: 10px;
+  }
+
+  .sig-major { background: rgba(212, 165, 116, 0.2); color: var(--accent); }
+  .sig-notable { background: rgba(124, 157, 224, 0.15); color: var(--accent2); }
+  .sig-minor { background: rgba(136, 136, 160, 0.1); color: var(--text-muted); }
+
+  .entry-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .entry-body {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .entry-body ul {
+    padding-left: 18px;
+    margin: 6px 0;
+  }
+
+  .entry-body li { margin-bottom: 4px; }
+
+  .entry-body code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: rgba(212, 165, 116, 0.1);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  .tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  .tag-feature { background: rgba(212, 165, 116, 0.15); color: var(--tag-feature); }
+  .tag-security { background: rgba(224, 112, 112, 0.15); color: var(--tag-security); }
+  .tag-plugin { background: rgba(176, 140, 219, 0.15); color: var(--tag-plugin); }
+  .tag-mcp { background: rgba(124, 157, 224, 0.15); color: var(--tag-mcp); }
+  .tag-hooks { background: rgba(107, 201, 160, 0.15); color: var(--tag-hooks); }
+  .tag-ide { background: rgba(224, 160, 80, 0.15); color: var(--tag-ide); }
+  .tag-perf { background: rgba(136, 184, 208, 0.15); color: var(--tag-perf); }
+  .tag-agentic { background: rgba(212, 124, 160, 0.15); color: var(--tag-agentic); }
+
+  /* Plugins section */
+  .plugins-section {
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+
+  .plugins-section h2 {
+    text-align: center;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: var(--tag-plugin);
+  }
+
+  .plugins-section .section-sub {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+  }
+
+  .plugin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .plugin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .plugin-card:hover { border-color: var(--tag-plugin); }
+
+  .plugin-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .plugin-author {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .plugin-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .plugin-stat {
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 8px;
+  }
+
+  .plugin-category-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.4rem; }
+    .stats-bar { gap: 20px; }
+    .stat-num { font-size: 1.2rem; }
+    .timeline { padding-left: 22px; }
+    .entry::before { left: -18px; }
+    .entry-card { padding: 12px 14px; }
+    .plugin-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Claude Code Timeline</h1>
+    <p class="subtitle">Every official feature, release, and update</p>
+    <p class="period">January 16 &mdash; April 14, 2026 &middot; v2.1.9 &mdash; v2.1.105</p>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">52+</div><div class="stat-label">Releases</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Months</div></div>
+    <div class="stat"><div class="stat-num">25+</div><div class="stat-label">Major Features</div></div>
+    <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Security Fixes</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="feature">Features</button>
+    <button class="filter-btn" data-filter="security">Security</button>
+    <button class="filter-btn" data-filter="plugin">Plugins & Skills</button>
+    <button class="filter-btn" data-filter="mcp">MCP</button>
+    <button class="filter-btn" data-filter="hooks">Hooks</button>
+    <button class="filter-btn" data-filter="ide">IDE</button>
+    <button class="filter-btn" data-filter="perf">Performance</button>
+    <button class="filter-btn" data-filter="agentic">Agentic</button>
+  </div>
+
+  <div class="sig-filters">
+    <button class="sig-btn active" data-sig="all">All levels</button>
+    <button class="sig-btn" data-sig="major">Major only</button>
+    <button class="sig-btn" data-sig="notable">Notable+</button>
+  </div>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search features, versions, keywords..." />
+  </div>
+
+  <div class="no-results" id="noResults">No entries match your filters.</div>
+
+  <div class="timeline" id="timeline">
+
+
+    <!-- =================== APRIL 2026 =================== -->
+    <div class="month-sep"><span>April 2026</span></div>
+
+    <div class="entry" data-sig="major" data-tags="feature,hooks,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.105</span>
+          <span class="entry-date">Apr 13, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">PreCompact hooks, background plugin monitors, EnterWorktree path</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>path</code> parameter on <code>EnterWorktree</code> — switch into existing worktrees without creating new ones</li>
+            <li><strong>PreCompact hook</strong>: hooks can block compaction (exit code 2 or <code>{"decision":"block"}</code>)</li>
+            <li>Background monitor support for plugins via <code>monitors</code> manifest key — auto-arms at session start</li>
+            <li><code>/proactive</code> is now an alias for <code>/loop</code></li>
+            <li>Stalled API streams abort after 5 min and retry non-streaming</li>
+            <li><code>/doctor</code> now has status icons; press <code>f</code> to auto-fix issues</li>
+            <li>Skill description cap raised from 250 to 1,536 characters</li>
+            <li><code>WebFetch</code> strips <code><style></code> and <code><script></code> from fetched pages</li>
+            <li>Fixed leading whitespace trimmed from assistant messages (broke ASCII art)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,security,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.101</span>
+          <span class="entry-date">Apr 10, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">/team-onboarding, OS CA trust, Ultraplan auto-cloud, 40+ fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/team-onboarding</code> — generates teammate ramp-up guide from local usage patterns</li>
+            <li>OS CA certificate store trusted by default — enterprise TLS proxies work without setup. <code>CLAUDE_CODE_CERT_STORE=bundled</code> to revert</li>
+            <li><code>/ultraplan</code> and remote sessions auto-create default cloud environment</li>
+            <li>Brief mode retries once when Claude responds with plain text instead of structured message</li>
+            <li>Focus mode: Claude writes more self-contained summaries knowing you only see final message</li>
+            <li>Rate-limit retry messages show which limit was hit and when it resets</li>
+            <li><strong>Security</strong>: fixed command injection in POSIX <code>which</code> fallback (CVE-2026-35021)</li>
+            <li>Fixed memory leak: long sessions retained dozens of historical copies of message list</li>
+            <li>Fixed <code>--resume</code>/<code>--continue</code> losing context on large sessions</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-security">security</span>
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,security,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.98</span>
+          <span class="entry-date">Apr 9, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Vertex AI wizard, Monitor tool, subprocess sandboxing, critical Bash security fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Interactive Google Vertex AI setup wizard</strong> from login screen</li>
+            <li><code>CLAUDE_CODE_PERFORCE_MODE</code> — Edit/Write fail on read-only files with <code>p4 edit</code> hint</li>
+            <li><strong>Monitor tool</strong> for streaming events from background scripts</li>
+            <li>Subprocess sandboxing with PID namespace isolation on Linux</li>
+            <li><code>TRACEPARENT</code> env var injection for OTEL tracing in Bash subprocesses</li>
+            <li><strong>Security</strong>: fixed Bash tool bypass — backslash-escaped flags, compound commands, env-var prefixes, <code>/dev/tcp</code>/<code>/dev/udp</code> redirects, <code>grep -f FILE</code></li>
+            <li>Fixed MCP OAuth <code>authServerMetadataUrl</code> not honored on token refresh</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-security">security</span>
+          <span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.97</span>
+          <span class="entry-date">Apr 8, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">NO_FLICKER focus view, Cedar syntax highlighting, MCP buffer leak fix</div>
+        <div class="entry-body">
+          <ul>
+            <li>Focus view toggle (<code>Ctrl+O</code>) in <code>NO_FLICKER</code> mode — shows prompt, one-line tool summary with diffstats, and final response</li>
+            <li><code>refreshInterval</code> for status line settings</li>
+            <li><code>● N running</code> indicator in <code>/agents</code></li>
+            <li>Syntax highlighting for Cedar policy files (<code>.cedar</code>, <code>.cedarpolicy</code>)</li>
+            <li>Fixed MCP HTTP/SSE buffer leak (~50 MB/hr on reconnect)</li>
+            <li>Hardened <code>--dangerously-skip-permissions</code> and Bash tool permission checks</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.94</span>
+          <span class="entry-date">Apr 7, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Amazon Bedrock Mantle support, default effort raised to "high"</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>CLAUDE_CODE_USE_MANTLE=1</code> enables Amazon Bedrock powered by Mantle</li>
+            <li><strong>Default effort changed from "medium" to "high"</strong> for API-key, Bedrock/Vertex/Foundry, Team, and Enterprise users</li>
+            <li>Compact <code>Slacked #channel</code> header with clickable link</li>
+            <li><code>keep-coding-instructions</code> frontmatter for plugin output styles</li>
+            <li>Plugin skills use frontmatter <code>name</code> field for stable invocation names</li>
+            <li>Fixed agents appearing stuck after 429 rate-limit with long <code>Retry-After</code></li>
+            <li>Fixed CJK text corruption when chunk boundaries split UTF-8 sequences</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.92</span>
+          <span class="entry-date">Apr 4, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Interactive Bedrock wizard, per-model cost breakdown, Write tool 60% faster</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>forceRemoteSettingsRefresh</code> policy — fail-closed: blocks startup until remote settings fetched</li>
+            <li><strong>Interactive Bedrock setup wizard</strong> from login screen</li>
+            <li>Per-model and cache-hit cost breakdown in <code>/cost</code></li>
+            <li><code>/release-notes</code> now interactive version picker</li>
+            <li>Pro users see footer hint when prompt cache expires</li>
+            <li>Removed <code>/tag</code> and <code>/vim</code> commands</li>
+            <li>Write tool diff computation 60% faster</li>
+            <li>Linux sandbox ships <code>apply-seccomp</code> helper</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,mcp,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.91</span>
+          <span class="entry-date">Apr 2, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">MCP result size override (500K chars), plugins can ship executables</div>
+        <div class="entry-body">
+          <ul>
+            <li>MCP tool result persistence override via <code>_meta["anthropic/maxResultSizeChars"]</code> — up to 500K chars</li>
+            <li><code>disableSkillShellExecution</code> setting</li>
+            <li>Multi-line support for <code>claude-cli://open?q=</code> deep links</li>
+            <li>Plugins can ship executables under <code>bin/</code> for direct Bash invocation</li>
+            <li>Edit tool uses shorter <code>old_string</code> anchors, reducing token usage</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-mcp">mcp</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.90</span>
+          <span class="entry-date">Apr 1, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">/powerup interactive lessons, offline plugin support</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/powerup</code> — interactive lessons with animated demos (onboarding tool)</li>
+            <li><code>CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE</code> for offline plugin use</li>
+            <li>Added <code>.husky</code> to protected directories</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.89</span>
+          <span class="entry-date">Apr 1, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">NO_FLICKER mode, "defer" hook decision, PermissionDenied hook</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>CLAUDE_CODE_NO_FLICKER=1</code> for flicker-free terminal rendering</li>
+            <li><code>"defer"</code> permission decision for PreToolUse hooks</li>
+            <li><code>PermissionDenied</code> hook — fires after auto denials</li>
+            <li>Named subagents appear in mention typeahead</li>
+            <li><code>MCP_CONNECTION_NONBLOCKING=true</code> for <code>-p</code> mode</li>
+            <li>Fixed <code>StructuredOutput</code> cache bug causing ~50% failure rate</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== MARCH 2026 =================== -->
+    <div class="month-sep"><span>March 2026</span></div>
+
+    <div class="entry" data-sig="major" data-tags="security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.88</span>
+          <span class="entry-date">Mar 31, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Source map leak — 512K lines of TypeScript exposed</div>
+        <div class="entry-body">
+          <ul>
+            <li>npm package accidentally included a 59.8 MB <code>.map</code> file with full unobfuscated source code</li>
+            <li>Community discovered unreleased features: <strong>KAIROS</strong> (background daemon), <strong>autoDream</strong> (memory consolidation), <strong>BUDDY</strong> (Tamagotchi system), 44 feature flags</li>
+            <li>Model codenames revealed: Capybara, Fennec (Opus 4.6), Numbat, strings for Opus 4.7 and Sonnet 4.8</li>
+            <li>Anthropic sent ~8,100 DMCA takedowns (later retracted most); plain developer error confirmed by Boris Cherny</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.86</span>
+          <span class="entry-date">Mar 27, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Session-Id header, Jujutsu & Sapling VCS support</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>X-Claude-Code-Session-Id</code> header on all API requests (allows proxy aggregation without body parsing)</li>
+            <li>Added <code>.jj</code> (Jujutsu) and <code>.sl</code> (Sapling) to VCS directory exclusions</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.84</span>
+          <span class="entry-date">Mar 26, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">PowerShell tool for Windows, TaskCreated hook, streaming overhaul</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>PowerShell tool</strong> for Windows (opt-in preview)</li>
+            <li>Custom model picker labels via <code>ANTHROPIC_DEFAULT_{OPUS,SONNET,HAIKU}_MODEL_*</code> env vars</li>
+            <li><code>CLAUDE_STREAM_IDLE_TIMEOUT_MS</code> (default 90s) streaming watchdog</li>
+            <li><code>TaskCreated</code> hook; <code>WorktreeCreate</code> HTTP hook with <code>worktreePath</code></li>
+            <li><code>allowedChannelPlugins</code> managed setting</li>
+            <li>Idle-return prompt after 75+ minute gaps</li>
+            <li>Tokens ≥1M display as "1.5m" etc.</li>
+            <li><strong>VSCode</strong>: rate limit warning with percentage/reset time</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="mcp,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.85</span>
+          <span class="entry-date">Mar 26, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">MCP OAuth RFC 9728, conditional hooks with "if" field</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>CLAUDE_CODE_MCP_SERVER_NAME</code>/<code>URL</code> for <code>headersHelper</code></li>
+            <li>Conditional <code>if</code> field for hooks — rule syntax lets hooks fire only when conditions match</li>
+            <li>MCP OAuth now follows RFC 9728 Protected Resource Metadata</li>
+            <li>PreToolUse hooks can satisfy <code>AskUserQuestion</code> with <code>updatedInput</code></li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-mcp">mcp</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.83</span>
+          <span class="entry-date">Mar 25, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Auto Mode launch, CwdChanged/FileChanged hooks, transcript search</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Auto Mode</strong>: permission auto-approval with server-side safety classifier. Safer alternative to <code>--dangerously-skip-permissions</code></li>
+            <li><code>managed-settings.d/</code> drop-in directory for fleet config management</li>
+            <li><code>CwdChanged</code> and <code>FileChanged</code> hooks for reactive automation</li>
+            <li><code>sandbox.failIfUnavailable</code> setting</li>
+            <li><code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> for credential stripping</li>
+            <li><strong>Transcript search</strong>: <code>/</code> in transcript mode, <code>n</code>/<code>N</code> to step through</li>
+            <li><code>Ctrl+X Ctrl+E</code> alias for external editor</li>
+            <li>Changed stop-agents binding from <code>Ctrl+F</code> to <code>Ctrl+X Ctrl+K</code></li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.81</span>
+          <span class="entry-date">Mar 20, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">--bare flag for headless scripting, channels permission relay</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>--bare</code> flag for scripted <code>-p</code> calls — strips interactive chrome</li>
+            <li><code>--channels</code> permission relay (research preview)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.80</span>
+          <span class="entry-date">Mar 19, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Startup memory reduced ~80MB, effort setting for skills</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>rate_limits</code> added to statusline scripts</li>
+            <li><code>effort</code> setting for skills/slash commands</li>
+            <li><code>--channels</code> (research preview for channel-based permission relay)</li>
+            <li>Reduced startup memory by ~80MB</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.79</span>
+          <span class="entry-date">Mar 18, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">VSCode remote-control bridge, --console flag, turn duration toggle</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>--console</code> flag for Anthropic Console auth</li>
+            <li>"Show turn duration" toggle in <code>/config</code></li>
+            <li><strong>VSCode</strong>: <code>/remote-control</code> bridge, AI-generated session titles, thinking pill display, fork/rewind actions</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,hooks,security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.78</span>
+          <span class="entry-date">Mar 17, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">StopFailure hook, plugin state persistence, agent settings</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>StopFailure</code> hook for API errors</li>
+            <li><code>${CLAUDE_PLUGIN_DATA}</code> env var for persistent plugin state across sessions</li>
+            <li><code>effort</code>, <code>maxTurns</code>, <code>disallowedTools</code> settings for agents</li>
+            <li>Terminal notifications reach outer tmux terminal</li>
+            <li>Response text streams line-by-line (not buffered)</li>
+            <li><strong>Security</strong>: fixed sandbox silent disable; fixed protected directories being writable</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.77</span>
+          <span class="entry-date">Mar 17, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Opus 4.6 output ceiling raised to 128K tokens</div>
+        <div class="entry-body">
+          <ul>
+            <li>Default output raised to 64K tokens; upper bound for Opus 4.6 and Sonnet 4.6 raised to 128K</li>
+            <li><code>allowRead</code> sandbox setting; <code>/copy N</code> retrieves Nth-latest response</li>
+            <li><strong>Security</strong>: PreToolUse hooks could bypass <code>deny</code> rules; Write converting line endings incorrectly</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.76</span>
+          <span class="entry-date">Mar 14, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">MCP elicitation support, /effort command, sparse checkout for monorepos</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>MCP elicitation</strong> — servers can request structured input mid-task via interactive dialog</li>
+            <li><code>Elicitation</code> and <code>ElicitationResult</code> hooks</li>
+            <li><code>-n</code>/<code>--name</code> CLI flag for session display name</li>
+            <li><code>worktree.sparsePaths</code> setting for large monorepos via git sparse-checkout</li>
+            <li><code>PostCompact</code> hook fires after compaction</li>
+            <li><code>/effort</code> slash command for model effort level</li>
+            <li>Changed default Opus to 4.6 on Bedrock/Vertex/Foundry</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.75</span>
+          <span class="entry-date">Mar 13, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">1M context window GA for Opus 4.6, /color command, effort simplification</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>1M context window</strong> for Opus 4.6 by default (Max, Team, Enterprise)</li>
+            <li><code>/color</code> command for prompt-bar session coloring</li>
+            <li>Session name display on prompt bar</li>
+            <li>Last-modified timestamps on memory files</li>
+            <li>Hook source display in permission prompts</li>
+            <li>Simplified effort levels: low/medium/high (removed max)</li>
+            <li>Improved startup on macOS (60ms faster)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,mcp,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.74</span>
+          <span class="entry-date">Mar 12, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">/context command, autoMemoryDirectory setting, Write 60% faster</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/context</code> command with actionable optimization suggestions</li>
+            <li><code>autoMemoryDirectory</code> setting for custom auto-memory storage</li>
+            <li>Write tool diff computation 60% faster</li>
+            <li>Fixed managed policy <code>ask</code> rules bypassed by user <code>allow</code> rules</li>
+            <li>Fixed MCP OAuth hanging when callback port in use</li>
+            <li><code>--plugin-dir</code> local dev copies now override marketplace plugins</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-mcp">mcp</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.73</span>
+          <span class="entry-date">Mar 11, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">modelOverrides setting, CPU freeze fix for complex Bash prompts</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>modelOverrides</code> setting for custom provider model IDs (Bedrock ARNs, etc.)</li>
+            <li>Actionable guidance for SSL certificate errors in OAuth</li>
+            <li>Fixed freezes/100% CPU from complex Bash permission prompts</li>
+            <li>Fixed deadlock from simultaneous skill file changes</li>
+            <li>Improved Up arrow after interrupt (restore + rewind)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.72</span>
+          <span class="entry-date">Mar 10, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">ExitWorktree tool, /plan description arg, /buddy Easter egg</div>
+        <div class="entry-body">
+          <ul>
+            <li>Tool search activation with <code>ANTHROPIC_BASE_URL</code> + <code>ENABLE_TOOL_SEARCH</code></li>
+            <li><code>w</code> key in <code>/copy</code> to write directly to file (SSH-friendly)</li>
+            <li>Optional description arg to <code>/plan</code></li>
+            <li><code>ExitWorktree</code> tool to leave <code>EnterWorktree</code> sessions</li>
+            <li><code>CLAUDE_CODE_DISABLE_CRON</code> env var</li>
+            <li>Expanded bash auto-approval: <code>lsof</code>, <code>pgrep</code>, <code>tput</code>, <code>ss</code>, <code>fd</code></li>
+            <li>Restored <code>model</code> parameter on Agent tool</li>
+            <li>Fixed <code>StructuredOutput</code> schema cache bug</li>
+            <li><code>/buddy</code> Easter egg for April 1st</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.71</span>
+          <span class="entry-date">Mar 7, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">/loop recurring tasks, cron scheduling, push-to-talk rebinding</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/loop</code> command for recurring prompts (e.g., <code>/loop 5m check the deploy</code>)</li>
+            <li>Cron scheduling tools for recurring prompts</li>
+            <li><code>voice:pushToTalk</code> rebindable keybinding</li>
+            <li>Expanded bash auto-approval: <code>fmt</code>, <code>comm</code>, <code>cmp</code>, <code>numfmt</code>, <code>expr</code>, <code>test</code>, <code>printf</code>, <code>seq</code>, <code>tsort</code></li>
+            <li>Fixed 5-8s startup freeze with voice mode</li>
+            <li>Improved bridge session reconnection (seconds vs. 10 minutes)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,ide,mcp,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.70</span>
+          <span class="entry-date">Mar 6, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">10 new voice languages, /claude-api skill, sandbox network settings, VSCode /mcp dialog</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>10 new STT languages</strong> (20 total) — Russian, Polish, Turkish, Dutch, Ukrainian, Greek, Czech, Danish, Swedish, Norwegian</li>
+            <li><code>/claude-api</code> skill for Claude API/SDK development</li>
+            <li><code>sandbox.enableWeakerNetworkIsolation</code> (macOS)</li>
+            <li><code>includeGitInstructions</code> setting; <code>${CLAUDE_SKILL_DIR}</code> variable</li>
+            <li><code>/reload-plugins</code> command; <code>InstructionsLoaded</code> hook event</li>
+            <li>Effort level display in logo/spinner; agent name in terminal title</li>
+            <li>Reduced bundle size ~510 KB</li>
+            <li><strong>VSCode</strong>: spark icon, full markdown plan view with comments, <code>/mcp</code> native server management dialog</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-ide">ide</span>
+          <span class="tag tag-mcp">mcp</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== FEBRUARY 2026 =================== -->
+    <div class="month-sep"><span>February 2026</span></div>
+
+    <div class="entry" data-sig="notable" data-tags="mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.67</span>
+          <span class="entry-date">Feb 27, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">allowedMcpServers managed setting for enterprise</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>allowedMcpServers</code> managed setting for team/enterprise</li>
+            <li>Fixed <code>deniedMcpServers</code> not blocking servers</li>
+            <li>MCP server deduplication and description improvements</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.63</span>
+          <span class="entry-date">Feb 28, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">HTTP hooks, /simplify & /batch commands, auto memory across worktrees, 13 memory leak fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/simplify</code> and <code>/batch</code> bundled slash commands</li>
+            <li>Project configs & auto memory now shared across git worktrees of same repo</li>
+            <li><strong>HTTP hooks</strong> — POST JSON to a URL and receive JSON instead of running a shell command</li>
+            <li>"Always copy full response" option in <code>/copy</code> picker</li>
+            <li><code>ENABLE_CLAUDEAI_MCP_SERVERS=false</code> to opt out of claude.ai MCP servers</li>
+            <li><code>/model</code> shows currently active model in menu</li>
+            <li>Manual URL paste fallback for MCP OAuth</li>
+            <li><strong>13 memory leak fixes</strong>: bridge polling, MCP OAuth, permission handler, file count cache, Bash prefix cache, MCP tool cache, IDE host detection, WebSocket transport, git root detection, JSON parsing, teammate messages, MCP server fetch, subagent progress payloads</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.59</span>
+          <span class="entry-date">Feb 26, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Auto-memory saves useful context automatically, /copy picker</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Auto-memory</strong>: Claude automatically saves useful context to memory. Manage with <code>/memory</code></li>
+            <li><code>/copy</code> command — interactive picker for individual code blocks or full response</li>
+            <li>Improved "always allow" prefix suggestions for compound bash commands</li>
+            <li>Improved memory usage in multi-agent sessions</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks,security,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.51</span>
+          <span class="entry-date">Feb 24, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Remote Control CLI, worktree isolation for agents, HTTP hook security hardening</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>claude remote-control</code> subcommand for external builds</li>
+            <li>Plugin marketplace git timeout raised to 120s; <code>CLAUDE_CODE_PLUGIN_GIT_TIMEOUT_MS</code> configurable</li>
+            <li>Custom npm registries and version pinning for plugin installs</li>
+            <li>BashTool skips login shell by default when shell snapshot available (performance)</li>
+            <li><code>/model</code> picker shows human-readable labels instead of raw model IDs</li>
+            <li><strong>Security</strong>: statusLine/fileSuggestion hook commands could execute without workspace trust; HTTP hooks could interpolate arbitrary env vars (now requires <code>allowedEnvVars</code>)</li>
+            <li>Tool results >50K chars persisted to disk (was 100K)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-security">security</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.50</span>
+          <span class="entry-date">Feb 20, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Agent worktree isolation, claude agents CLI, Opus 4.6 fast mode 1M context, 16 memory leak fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>isolation: worktree</code> in agent definitions — agents run in isolated git worktrees</li>
+            <li><code>claude agents</code> CLI command to list all configured agents</li>
+            <li><code>WorktreeCreate</code> and <code>WorktreeRemove</code> hook events</li>
+            <li>LSP <code>startupTimeout</code> configuration</li>
+            <li>Opus 4.6 (fast mode) now includes full 1M context window</li>
+            <li><code>CLAUDE_CODE_DISABLE_1M_CONTEXT</code> env var</li>
+            <li><code>CLAUDE_CODE_SIMPLE</code> mode disables MCP, attachments, hooks, CLAUDE.md for minimal experience</li>
+            <li>Improved headless mode startup (deferred Yoga WASM and UI imports)</li>
+            <li><strong>16 memory leak fixes</strong>: LSP diagnostics, task output, CircularBuffer, shell command ChildProcess/AbortController, file history snapshots, completed task state, internal caches, and more</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.49</span>
+          <span class="entry-date">Feb 19, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">ConfigChange hook, SDK rate limit info, WASM memory fix</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>ConfigChange</code> hook event — fires when config files change during a session (enterprise auditing, optional blocking)</li>
+            <li><code>SDKRateLimitInfo</code> and capability fields (<code>supportsEffort</code>, <code>supportedEffortLevels</code>, <code>supportsAdaptiveThinking</code>)</li>
+            <li>Fixed Ctrl+C and ESC silently ignored when background agents running and main thread idle</li>
+            <li>Fixed unbounded WASM memory growth during long sessions (periodic tree-sitter parser resets)</li>
+            <li>Non-interactive mode (<code>-p</code>) skips unnecessary API calls on startup</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.47</span>
+          <span class="entry-date">Feb 18, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Massive quality release: 50+ bug fixes, UX polish, stop-agents keybinding</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>last_assistant_message</code> in Stop/SubagentStop hook inputs</li>
+            <li><code>chat:newline</code> keybinding action for configurable multi-line input</li>
+            <li><strong>50+ bug fixes</strong>: compaction with PDFs, bash output on Windows, API 400 errors with concurrent agents, single file error no longer aborts parallel operations</li>
+            <li>Changed <code>Ctrl+F</code> to kill all background agents (replaces double-press ESC)</li>
+            <li>Config backups moved to <code>~/.claude/backups/</code> with rotation</li>
+            <li>Initial session count in resume picker increased from 10 to 50</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.45</span>
+          <span class="entry-date">Feb 17, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Sonnet 4.6 launch, SDK rate limit events</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Claude Sonnet 4.6 now available</strong></li>
+            <li><code>SDKRateLimitInfo</code> and <code>SDKRateLimitEvent</code> types for rate limit status updates (utilization, reset times, overage)</li>
+            <li><code>spinnerTipsOverride</code> setting to customize spinner tips</li>
+            <li>Fixed Agent Teams failing on Bedrock/Vertex/Foundry</li>
+            <li>Startup performance improvement by removing eager loading of session history</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.41</span>
+          <span class="entry-date">Feb 13, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Windows ARM64 native binary, auth CLI subcommands</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>claude auth login</code>, <code>claude auth status</code>, <code>claude auth logout</code> CLI subcommands</li>
+            <li><strong>Windows ARM64 (win32-arm64) native binary support</strong></li>
+            <li><code>/rename</code> auto-generates session name from conversation context when called without arguments</li>
+            <li>Fixed AWS auth refresh hanging indefinitely (added 3-minute timeout)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.38</span>
+          <span class="entry-date">Feb 10, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Security: heredoc delimiter hardening, sandbox skill write blocking</div>
+        <div class="entry-body">
+          <ul>
+            <li>Improved heredoc delimiter parsing to prevent command smuggling</li>
+            <li>Blocked writes to <code>.claude/skills</code> directory in sandbox mode</li>
+            <li>Fixed bash permission matching for commands using environment variable wrappers</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.33</span>
+          <span class="entry-date">Feb 6, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Multi-agent hooks (TeammateIdle, TaskCompleted), agent memory scopes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>TeammateIdle</code> and <code>TaskCompleted</code> hook events for multi-agent workflows</li>
+            <li><code>Task(agent_type)</code> syntax to restrict which sub-agents can be spawned</li>
+            <li><code>memory</code> frontmatter field for agents with <code>user</code>, <code>project</code>, or <code>local</code> scope</li>
+            <li>Plugin name added to skill descriptions and <code>/skills</code> menu</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.32</span>
+          <span class="entry-date">Feb 5, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Claude Opus 4.6 launch, Agent Teams research preview, auto-memory</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Claude Opus 4.6 now available</strong> in Claude Code</li>
+            <li>Research preview: <strong>Agent Teams</strong> for multi-agent collaboration (<code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>)</li>
+            <li><strong>Auto-memory</strong>: Claude automatically records and recalls memories as it works</li>
+            <li>"Summarize from here" in message selector for partial conversation summarization</li>
+            <li>Skills in <code>.claude/skills/</code> within additional directories now loaded automatically</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.30</span>
+          <span class="entry-date">Feb 3, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">PDF page reading, MCP OAuth credentials, /debug command</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>pages</code> parameter to Read tool for PDFs (e.g., <code>pages: "1-5"</code>); large PDFs return lightweight reference when <code>@</code>-mentioned</li>
+            <li>Pre-configured OAuth client credentials for MCP servers without Dynamic Client Registration</li>
+            <li><code>/debug</code> command for Claude to troubleshoot current session</li>
+            <li>Token count, tool uses, and duration metrics in Task tool results</li>
+            <li>Reduced motion mode in config</li>
+            <li>68% memory reduction for <code>--resume</code> with many sessions</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== JANUARY 2026 =================== -->
+    <div class="month-sep"><span>January 2026</span></div>
+
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.27</span>
+          <span class="entry-date">Jan 30, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">--from-pr flag, automatic PR-linked sessions</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>--from-pr</code> flag to resume sessions linked to a specific GitHub PR number or URL</li>
+            <li>Sessions automatically linked to PRs when created via <code>gh pr create</code></li>
+            <li>Permissions now respect content-level <code>ask</code> over tool-level <code>allow</code></li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.23</span>
+          <span class="entry-date">Jan 29, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">mTLS/proxy connectivity fix, customizable spinner verbs</div>
+        <div class="entry-body">
+          <ul>
+            <li>Customizable spinner verbs setting (<code>spinnerVerbs</code>)</li>
+            <li>Fixed mTLS and proxy connectivity for corporate proxy / client certificate users</li>
+            <li>Terminal rendering performance with optimized screen data layout</li>
+            <li>Bash commands show timeout duration alongside elapsed time</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-perf">performance</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.20</span>
+          <span class="entry-date">Jan 27, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">PR review status indicator, CLAUDE.md from --add-dir, major UX polish</div>
+        <div class="entry-body">
+          <ul>
+            <li>PR review status indicator in prompt footer (approved/changes requested/pending/draft as colored dot with clickable link)</li>
+            <li>Support for loading <code>CLAUDE.md</code> from additional directories via <code>--add-dir</code></li>
+            <li>Arrow key history navigation in vim normal mode</li>
+            <li>External editor shortcut (<code>Ctrl+G</code>) in help menu</li>
+            <li><code>/sandbox</code> shows dependency status with installation instructions</li>
+            <li>Thinking status text with subtle shimmer animation</li>
+            <li>Background agents prompt for tool permissions before launching</li>
+            <li>Config backups timestamped and rotated (5 most recent)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.19</span>
+          <span class="entry-date">Jan 23, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Shorthand argument syntax, skills without approval</div>
+        <div class="entry-body">
+          <ul>
+            <li>Shorthand <code>$0</code>, <code>$1</code>, etc. for accessing individual arguments in custom commands</li>
+            <li>Skills without additional permissions or hooks allowed without requiring approval</li>
+            <li><strong>VSCode</strong>: session forking and rewind enabled for all users</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="major" data-tags="feature,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.16</span>
+          <span class="entry-date">Jan 22, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">New task management system with dependency tracking</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>New task management system</strong> with dependency tracking</li>
+            <li><strong>VSCode</strong>: native plugin management support</li>
+            <li><strong>VSCode</strong>: OAuth users can browse and resume remote Claude sessions</li>
+            <li>Fixed out-of-memory crashes when resuming sessions with heavy subagent usage</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.14</span>
+          <span class="entry-date">Jan 20, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Bash history autocomplete, plugin version pinning</div>
+        <div class="entry-body">
+          <ul>
+            <li>History-based autocomplete in bash mode (<code>!</code>) — type partial command and press Tab to complete from history</li>
+            <li>Search added to installed plugins list</li>
+            <li>Support for pinning plugins to specific git commit SHAs (exact version installs)</li>
+            <li>Fixed context window blocking at ~65% instead of intended ~98%</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-plugin">plugins</span>
+        </div>
+      </div>
+    </div>
+    <div class="entry" data-sig="notable" data-tags="feature,mcp,hooks">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.9</span>
+          <span class="entry-date">Jan 16, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">MCP auto-enable threshold, plansDirectory, PreToolUse additionalContext</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>auto:N</code> syntax for MCP tool search auto-enable threshold (N = context window %)</li>
+            <li><code>plansDirectory</code> setting to customize where plan files are stored</li>
+            <li>External editor support (<code>Ctrl+G</code>) in AskUserQuestion input field</li>
+            <li><code>PreToolUse</code> hooks can return <code>additionalContext</code> to the model</li>
+            <li><code>${CLAUDE_SESSION_ID}</code> string substitution for skills</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-mcp">mcp</span>
+          <span class="tag tag-hooks">hooks</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <div class="plugins-section">
+    <h2>Popular Plugins, Skills & Ecosystem</h2>
+    <p class="section-sub">Most-installed official skills, community collections, and agentic frameworks (as of April 2026)</p>
+
+    <div class="plugin-category-title">Official Anthropic Skills</div>
+    <div class="plugin-grid">
+      <div class="plugin-card">
+        <div class="plugin-name">frontend-design</div>
+        <div class="plugin-author">Anthropic (anthropics/skills)</div>
+        <div class="plugin-desc">Design and implement frontend components with best practices.</div>
+        <div class="plugin-stat">277,000+ installs</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">mcp-builder</div>
+        <div class="plugin-author">Anthropic</div>
+        <div class="plugin-desc">Generate new MCP servers from natural language descriptions.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">web-artifacts-builder</div>
+        <div class="plugin-author">Anthropic</div>
+        <div class="plugin-desc">Build complex interactive HTML artifacts.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">pdf / docx / pptx / xlsx</div>
+        <div class="plugin-author">Anthropic</div>
+        <div class="plugin-desc">Read and generate Office documents and PDFs directly from Claude Code.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">webapp-testing</div>
+        <div class="plugin-author">Anthropic</div>
+        <div class="plugin-desc">End-to-end testing for web applications.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">skill-creator</div>
+        <div class="plugin-author">Anthropic</div>
+        <div class="plugin-desc">Bootstrap new skills from a template.</div>
+      </div>
+    </div>
+    <div class="plugin-category-title">Community Collections</div>
+    <div class="plugin-grid">
+      <div class="plugin-card">
+        <div class="plugin-name">obra/superpowers</div>
+        <div class="plugin-author">Jesse Vincent (Prime Radiant)</div>
+        <div class="plugin-desc">14 agentic skills forcing 5-phase discipline: clarify, design, plan, code, verify. Includes brainstorming, TDD, git-worktrees, subagent-driven development.</div>
+        <div class="plugin-stat">~93,000 GitHub stars · Official listing at claude.com/plugins/superpowers</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">everything-claude-code</div>
+        <div class="plugin-author">affaan-m</div>
+        <div class="plugin-desc">Complete agent harness: 47 subagents, 181 skills, 79 slash commands, 14 MCP configs, 20+ hooks. Anthropic hackathon winner.</div>
+        <div class="plugin-stat">~140,000 GitHub stars</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">alirezarezvani/claude-skills</div>
+        <div class="plugin-author">alirezarezvani</div>
+        <div class="plugin-desc">232+ skills across engineering, marketing, product, compliance. Works with Claude Code, Codex, Gemini CLI, Cursor, and 8+ agents.</div>
+        <div class="plugin-stat">~5,200 GitHub stars</div>
+      </div>
+    </div>
+    <div class="plugin-category-title">Top MCP Servers</div>
+    <div class="plugin-grid">
+      <div class="plugin-card">
+        <div class="plugin-name">Context7</div>
+        <div class="plugin-author">Upstash</div>
+        <div class="plugin-desc">Injects version-specific library docs into LLM context, preventing hallucinated API calls. #1 on FastMCP by 2x margin.</div>
+        <div class="plugin-stat">~52,500 GitHub stars</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Playwright MCP</div>
+        <div class="plugin-author">Microsoft</div>
+        <div class="plugin-desc">Browser automation via accessibility snapshots — no screenshots needed.</div>
+        <div class="plugin-stat">~29,600 GitHub stars</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Sequential Thinking</div>
+        <div class="plugin-author">Anthropic (official)</div>
+        <div class="plugin-desc">Structured step-by-step reasoning for complex problems.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">GitHub MCP Server</div>
+        <div class="plugin-author">GitHub (official)</div>
+        <div class="plugin-desc">Full GitHub API: PRs, issues, diffs, workflows, code scanning.</div>
+        <div class="plugin-stat">97M total MCP ecosystem installs</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Firecrawl</div>
+        <div class="plugin-author">Firecrawl (official partner)</div>
+        <div class="plugin-desc">Web scraping with JS rendering, anti-bot bypass, clean markdown output.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Linear</div>
+        <div class="plugin-author">Linear (official partner)</div>
+        <div class="plugin-desc">Create issues, manage projects, update statuses from Claude Code.</div>
+      </div>
+    </div>
+    <div class="plugin-category-title">Official Partner Plugins</div>
+    <div class="plugin-grid">
+      <div class="plugin-card">
+        <div class="plugin-name">Cloudflare</div>
+        <div class="plugin-author">Cloudflare</div>
+        <div class="plugin-desc">Workers, Durable Objects, Wrangler CLI, Agents SDK integration.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Bright Data</div>
+        <div class="plugin-author">Bright Data</div>
+        <div class="plugin-desc">Anti-bot web scraping; structured extraction from 40+ sites.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">CockroachDB</div>
+        <div class="plugin-author">Cockroach Labs</div>
+        <div class="plugin-desc">Schema exploration, optimized SQL, distributed DB management.</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Box / Cloudinary</div>
+        <div class="plugin-author">Box / Cloudinary</div>
+        <div class="plugin-desc">Content management, media asset management, transformations, and optimization.</div>
+      </div>
+    </div>
+    <div class="plugin-category-title">Agentic Coding</div>
+    <div class="plugin-grid">
+      <div class="plugin-card">
+        <div class="plugin-name">GasTown</div>
+        <div class="plugin-author">Steve Yegge (gastownhall)</div>
+        <div class="plugin-desc">Multi-agent workspace manager for Claude Code, Copilot, Codex, Gemini. Go-based with Mayor/Polecats/Convoys architecture.</div>
+        <div class="plugin-stat">~13,531</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">awesome-claude-code-subagents</div>
+        <div class="plugin-author">VoltAgent</div>
+        <div class="plugin-desc">100+ specialized subagent definitions as templates</div>
+      </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Claude Code Agent Teams</div>
+        <div class="plugin-author">Anthropic (native)</div>
+        <div class="plugin-desc">2-16 peer-to-peer agent sessions with shared task list. Opus-only. Research preview since Feb 5, 2026.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Claude Code Timeline &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
+    <p>Last updated: April 15, 2026 &middot; v2.1.9 through v2.1.105</p>
+  </footer>
+</div>
+
+<script>
+(function() {
+  const timeline = document.getElementById('timeline');
+  const entries = Array.from(timeline.querySelectorAll('.entry'));
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const sigBtns = document.querySelectorAll('.sig-btn');
+  const searchInput = document.getElementById('search');
+  const noResults = document.getElementById('noResults');
+
+  let activeFilter = 'all';
+  let activeSig = 'all';
+  let searchTerm = '';
+
+  function applyFilters() {
+    let visible = 0;
+    entries.forEach(entry => {
+      const tags = entry.dataset.tags || '';
+      const sig = entry.dataset.sig || '';
+      const text = entry.textContent.toLowerCase();
+
+      let show = true;
+
+      // Tag filter
+      if (activeFilter !== 'all' && !tags.includes(activeFilter)) show = false;
+
+      // Significance filter
+      if (activeSig === 'major' && sig !== 'major') show = false;
+      if (activeSig === 'notable' && sig === 'minor') show = false;
+
+      // Search
+      if (searchTerm && !text.includes(searchTerm)) show = false;
+
+      entry.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    // Show/hide month separators based on visible entries
+    const monthSeps = timeline.querySelectorAll('.month-sep');
+    monthSeps.forEach(sep => {
+      let next = sep.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('month-sep')) {
+        if (next.classList.contains('entry') && !next.classList.contains('hidden')) {
+          hasVisible = true;
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+      sep.style.display = hasVisible ? '' : 'none';
+    });
+
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  sigBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sigBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSig = btn.dataset.sig;
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    searchTerm = e.target.value.toLowerCase().trim();
+    applyFilters();
+  });
+})();
+</script>
+
+</body>
+</html>

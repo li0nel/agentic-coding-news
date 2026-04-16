@@ -430,7 +430,7 @@
   <header>
     <h1>Agentic Coding News</h1>
     <p class="subtitle">Every official feature, release, and update</p>
-    <p class="period">Jan 16, 2026 &mdash; Apr 15, 2026 &middot; v2.1.9 &mdash; v2.1.109</p>
+    <p class="period">Jan 16, 2026 &mdash; Apr 15, 2026 &middot; v2.1.9 &mdash; v2.1.110</p>
   </header>
 
   <div class="filters">
@@ -461,6 +461,52 @@
 
     <!-- =================== APRIL 2026 =================== -->
     <div class="month-sep"><span>April 2026</span></div>
+
+    <div class="entry" data-sig="major" data-tags="feature,hooks,security,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.110</span>
+          <span class="entry-date">Apr 15, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">/tui command, push notifications, /focus, distributed tracing, 30+ fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><code>/tui</code> command and <code>tui</code> setting — run <code>/tui fullscreen</code> for flicker-free rendering in the same conversation without restarting</li>
+            <li><strong>Push notification tool</strong> — Claude can send mobile push notifications when Remote Control is enabled and "Push when Claude decides" config is set</li>
+            <li><code>Ctrl+O</code> now only toggles verbose transcript; new <code>/focus</code> command takes over focus view toggling</li>
+            <li><code>autoScrollEnabled</code> config to disable conversation auto-scroll in fullscreen mode</li>
+            <li>External editor context: option to show Claude's last response as commented context in <code>Ctrl+G</code> diff (enable via <code>/config</code>)</li>
+            <li><code>/plugin</code> Installed tab improvements — attention items and favorites appear at top, disabled items hidden behind a fold, <code>f</code> to favorite</li>
+            <li><code>/doctor</code> warns when MCP server defined in multiple config scopes with different endpoints</li>
+            <li><code>--resume</code>/<code>--continue</code> now resurrects unexpired scheduled tasks</li>
+            <li><code>/autocompact</code>, <code>/context</code>, <code>/exit</code>, <code>/reload-plugins</code> now work from Remote Control (mobile/web) clients</li>
+            <li>Write tool informs the model when you edit proposed content in the IDE diff before accepting</li>
+            <li>Bash tool now enforces documented maximum timeout (previously accepted arbitrarily large values)</li>
+            <li>SDK/headless sessions read <code>TRACEPARENT</code>/<code>TRACESTATE</code> from environment for W3C distributed trace linking</li>
+            <li>Session recap now enabled for telemetry-disabled users (Bedrock, Vertex, Foundry, <code>DISABLE_TELEMETRY</code>); opt out via <code>/config</code> or <code>CLAUDE_CODE_ENABLE_AWAY_SUMMARY=0</code></li>
+            <li><strong>Security</strong>: hardened "Open in editor" actions against command injection from untrusted filenames</li>
+            <li><strong>Security</strong>: fixed <code>PermissionRequest</code> hooks with <code>updatedInput</code> not re-checked against <code>permissions.deny</code>; <code>setMode:'bypassPermissions'</code> now respects <code>disableBypassPermissionsMode</code></li>
+            <li>Fixed MCP tool calls hanging indefinitely when server connection drops mid-response on SSE/HTTP</li>
+            <li>Fixed non-streaming fallback retries causing multi-minute hangs when API unreachable</li>
+            <li>Fixed high CPU usage in fullscreen when text selected while tool running</li>
+            <li>Fixed dropped keystrokes after CLI relaunches (e.g., <code>/tui</code>, setup wizards)</li>
+            <li>Fixed garbled startup rendering in macOS Terminal.app and terminals without synchronized output</li>
+            <li>Fixed Remote Control session renames from claude.ai not persisting to local CLI session</li>
+            <li>Fixed stdio MCP servers printing stray non-JSON lines being disconnected on first stray line (regression in v2.1.105)</li>
+            <li>Fixed <code>PreToolUse</code> hook <code>additionalContext</code> dropped when tool call fails</li>
+            <li>Fixed <code>/skills</code> menu not scrolling when list overflows modal in fullscreen</li>
+            <li>Fixed headless/SDK auto-title firing extra Haiku request when <code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> set</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-hooks">hooks</span>
+          <span class="tag tag-security">security</span>
+          <span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
 
     <div class="entry" data-sig="minor" data-tags="feature">
       <div class="entry-card">
@@ -1910,7 +1956,7 @@
 
   <footer>
     <p>Agentic Coding News &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
-    <p>Last updated: April 15, 2026 &middot; v2.1.9 through v2.1.109</p>
+    <p>Last updated: April 16, 2026 &middot; v2.1.9 through v2.1.110</p>
   </footer>
 </div>
 

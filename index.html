@@ -430,7 +430,7 @@
   <header>
     <h1>Agentic Coding News</h1>
     <p class="subtitle">Every official feature, release, and update</p>
-    <p class="period">Jan 16, 2026 &mdash; Apr 15, 2026 &middot; v2.1.9 &mdash; v2.1.110</p>
+    <p class="period">Jan 16, 2026 &mdash; Apr 17, 2026 &middot; v2.1.9 &mdash; v2.1.113</p>
   </header>
 
   <div class="filters">
@@ -461,6 +461,106 @@
 
     <!-- =================== APRIL 2026 =================== -->
     <div class="month-sep"><span>April 2026</span></div>
+
+    <div class="entry" data-sig="major" data-tags="feature,security,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.113</span>
+          <span class="entry-date">Apr 17, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Native binary spawning, sandbox network deny-list, security hardening, 30+ fixes</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Architecture</strong>: CLI now spawns a native Claude Code binary (per-platform optional dependency) instead of bundled JavaScript — first step toward faster startup and smaller JS bundle</li>
+            <li><code>sandbox.network.deniedDomains</code> setting to block specific domains even when a broader <code>allowedDomains</code> wildcard would otherwise permit them</li>
+            <li><strong>Security</strong>: macOS — <code>/private/{etc,var,tmp,home}</code> paths now treated as dangerous removal targets under <code>Bash(rm:*)</code> allow rules</li>
+            <li><strong>Security</strong>: Bash deny rules now match commands wrapped in <code>env</code>/<code>sudo</code>/<code>watch</code>/<code>ionice</code>/<code>setsid</code> and similar execution wrappers</li>
+            <li><strong>Security</strong>: <code>Bash(find:*)</code> allow rules no longer auto-approve <code>find -exec</code>/<code>-delete</code> clauses</li>
+            <li>Fullscreen mode: Shift+↑/↓ scrolls the viewport when extending a selection past the visible edge</li>
+            <li><code>Ctrl+A</code> and <code>Ctrl+E</code> now move to start/end of current logical line in multiline input (readline behavior)</li>
+            <li>Windows: <code>Ctrl+Backspace</code> now deletes the previous word</li>
+            <li>Long URLs in responses and bash output stay clickable when wrapping across lines (terminals with OSC 8 hyperlinks)</li>
+            <li>Improved <code>/loop</code>: Esc now cancels pending wakeups; wakeup display shows "Claude resuming /loop wakeup"</li>
+            <li><code>/extra-usage</code> now works from Remote Control (mobile/web) clients</li>
+            <li>Remote Control clients can query <code>@</code>-file autocomplete suggestions</li>
+            <li><code>/ultrareview</code>: faster launch with parallelized checks, diffstat in launch dialog, animated launching state</li>
+            <li>Subagents that stall mid-stream fail with clear error after 10 minutes instead of hanging silently</li>
+            <li>Fixed MCP concurrent-call timeout handling where messages could disarm other calls' watchdog</li>
+            <li>Fixed markdown tables breaking with inline code spans containing pipes</li>
+            <li>Fixed session recap auto-firing while composing unsent text</li>
+            <li>Fixed <code>Bash dangerouslyDisableSandbox</code> running without permission prompt</li>
+            <li>Fixed compacting resumed long-context sessions failing</li>
+            <li>Fixed <code>plugin install</code> succeeding with dependency version conflicts (now reports <code>range-conflict</code>)</li>
+            <li>Fixed SDK image content blocks failing and crashing sessions</li>
+            <li>Fixed Remote Control sessions not streaming subagent transcripts</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-security">security</span>
+          <span class="tag tag-perf">perf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.112</span>
+          <span class="entry-date">Apr 16, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Fixed claude-opus-4-7 unavailability in auto mode</div>
+        <div class="entry-body">
+          <ul>
+            <li>Fixed "claude-opus-4-7 is temporarily unavailable" error for auto mode (same-day hotfix following v2.1.111 launch)</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.111</span>
+          <span class="entry-date">Apr 16, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Claude Opus 4.7 + xhigh effort, /ultrareview, auto mode for Max, PowerShell on Windows</div>
+        <div class="entry-body">
+          <ul>
+            <li><strong>Claude Opus 4.7</strong> now available; default effort raised to <code>xhigh</code> for all plans in Claude Code</li>
+            <li><code>xhigh</code> effort level (between <code>high</code> and <code>max</code>) for Opus 4.7; tunable via <code>/effort</code>, <code>--effort</code>, and model picker</li>
+            <li><strong>Auto mode</strong> extended to Max subscribers (no longer requires <code>--enable-auto-mode</code>); safer alternative to <code>--dangerously-skip-permissions</code> using server-side safety classifier</li>
+            <li><strong><code>/ultrareview</code></strong> skill: comprehensive cloud-based code review using parallel multi-agent analysis; Pro and Max users receive 3 free ultrareviews at launch</li>
+            <li><strong><code>/less-permission-prompts</code></strong> skill: scans transcripts and proposes prioritized <code>allow</code> rules for <code>.claude/settings.json</code></li>
+            <li><strong>PowerShell tool</strong> progressive rollout on Windows (opt in/out via <code>CLAUDE_CODE_USE_POWERSHELL_TOOL</code>); available on Linux/macOS with <code>pwsh</code> installed</li>
+            <li>Interactive <code>/effort</code> slider: opens with no arguments, arrow-key navigation, Enter to confirm</li>
+            <li>"Auto (match terminal)" theme option — syncs with terminal's dark/light mode preference</li>
+            <li>Read-only bash commands with globs (e.g., <code>ls *.ts</code>) no longer trigger permission prompts</li>
+            <li>Commands starting with <code>cd &lt;project-dir&gt; &amp;&amp;</code> no longer trigger permission prompts</li>
+            <li>Typo suggestions for <code>claude</code> subcommands (e.g., <code>claude udpate</code> → "Did you mean <code>claude update</code>?")</li>
+            <li>Plan files now named after the prompt (e.g., <code>fix-auth-race-snug-otter.md</code>) instead of random words</li>
+            <li><code>/skills</code> menu supports sorting by token count (press <code>t</code>)</li>
+            <li><code>Ctrl+U</code> now clears entire input buffer; <code>Ctrl+Y</code> restores (was: delete to start of line only)</li>
+            <li><code>Ctrl+L</code> forces full screen redraw and clears prompt input</li>
+            <li>Headless <code>--output-format stream-json</code> includes <code>plugin_errors</code> on init event</li>
+            <li>Fixed <code>@</code> file suggestions re-scanning entire project in non-git directories</li>
+            <li>Fixed LSP diagnostics appearing after edits</li>
+            <li>Fixed <code>/clear</code> dropping session name set by <code>/rename</code></li>
+            <li>Windows: <code>CLAUDE_ENV_FILE</code> and SessionStart hook now apply correctly</li>
+          </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+          <span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
 
     <div class="entry" data-sig="major" data-tags="feature,hooks,security,mcp">
       <div class="entry-card">
@@ -1951,12 +2051,18 @@
         <div class="plugin-author">Anthropic (native)</div>
         <div class="plugin-desc">2-16 peer-to-peer agent sessions with shared task list. Opus-only. Research preview since Feb 5, 2026.</div>
       </div>
+      <div class="plugin-card">
+        <div class="plugin-name">Claude Code Routines</div>
+        <div class="plugin-author">Anthropic (native)</div>
+        <div class="plugin-desc">Cloud-based saved automations with schedule, API, and GitHub webhook triggers. Runs on Anthropic infrastructure without a local machine. Launched Apr 14, 2026 in research preview across all paid plans.</div>
+        <div class="plugin-stat">Available at claude.ai/code/routines or via /schedule</div>
+      </div>
     </div>
   </div>
 
   <footer>
     <p>Agentic Coding News &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
-    <p>Last updated: April 16, 2026 &middot; v2.1.9 through v2.1.110</p>
+    <p>Last updated: April 18, 2026 &middot; v2.1.9 through v2.1.113</p>
   </footer>
 </div>
 

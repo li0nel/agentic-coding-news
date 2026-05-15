@@ -430,7 +430,7 @@
   <header>
     <h1>Agentic Coding News</h1>
     <p class="subtitle">Every official feature, release, and update</p>
-    <p class="period">Jan 16, 2026 &mdash; Apr 17, 2026 &middot; v2.1.9 &mdash; v2.1.113</p>
+    <p class="period">Jan 16, 2026 &mdash; May 14, 2026 &middot; v2.1.9 &mdash; v2.1.142</p>
   </header>
 
   <div class="filters">
@@ -458,6 +458,588 @@
   <div class="no-results" id="noResults">No entries match your filters.</div>
 
   <div class="timeline" id="timeline">
+
+
+    <!-- =================== MAY 2026 =================== -->
+    <div class="month-sep"><span>May 2026</span></div>
+
+    <div class="entry" data-sig="major" data-tags="feature,agentic,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.142</span>
+          <span class="entry-date">May 14, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">claude agents launch flags, Fast mode → Opus 4.7, root SKILL.md as plugin skill, 20+ background agent fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>claude agents</code> now accepts <code>--add-dir</code>, <code>--settings</code>, <code>--mcp-config</code>, <code>--plugin-dir</code>, <code>--permission-mode</code>, <code>--model</code>, <code>--effort</code>, and <code>--dangerously-skip-permissions</code> to fully configure dispatched background sessions</li>
+        <li><strong>Fast mode now uses Opus 4.7</strong> by default (was Opus 4.6); pin to 4.6 with <code>CLAUDE_CODE_OPUS_4_6_FAST_MODE_OVERRIDE=1</code></li>
+        <li>Plugins with a root-level <code>SKILL.md</code> and no <code>skills/</code> subdirectory are now surfaced as a skill automatically</li>
+        <li><code>/plugin</code> details pane and <code>claude plugin details</code> now show LSP servers a plugin provides</li>
+        <li>Fixed daemon not exiting cleanly after <code>brew upgrade</code>, causing dispatched agents to crash-loop on deleted path</li>
+        <li>Fixed background sessions disappearing after macOS sleep/wake (daemon now detects clock jumps)</li>
+        <li>Fixed background sessions not recognizing pre-existing git worktrees</li>
+        <li>Fixed <code>claude agents</code> deadlocking on Windows with network-drive working directories</li>
+        <li>Improved reactive compaction: first summarize attempt seeds from overflow size, avoiding wasted retry</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-agentic">agentic</span><span class="tag tag-plugin">plugin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,hooks,agentic,plugin,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.141</span>
+          <span class="entry-date">May 13, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">terminalSequence hook output, ANTHROPIC_WORKSPACE_ID, /feedback with sessions, Rewind "Summarize up to here", 60+ fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>terminalSequence</code> field in hook JSON output — emit desktop notifications, window titles, and bells without a controlling terminal</li>
+        <li><code>ANTHROPIC_WORKSPACE_ID</code> environment variable for workload identity federation</li>
+        <li><code>claude agents --cwd <path></code> scopes session list to a directory</li>
+        <li><code>/feedback</code> can now include recent sessions (last 24h or 7d) for multi-session issues</li>
+        <li>Rewind menu: "Summarize up to here" option compresses earlier context while keeping recent turns intact</li>
+        <li>Background agents launched via <code>/bg</code> or <code>←←</code> now preserve current permission mode instead of reverting to default</li>
+        <li>Restored "view diff in your IDE" option on file-edit permission prompts when IDE connected</li>
+        <li>Spinner warms to amber after 10 seconds to signal Claude is still working during long thinking periods</li>
+        <li>Fixed background side-queries sending unavailable Haiku model ID on Bedrock/Vertex/Foundry — now falls back to main-loop model</li>
+        <li>Fixed Ctrl+C not interrupting a running turn while in vim INSERT/VISUAL mode</li>
+        <li>Fixed alternative <code>chat:submit</code> keybindings (e.g. <code>meta+enter</code>) not working when <code>enter</code> is rebound to <code>chat:newline</code></li>
+        <li>Fixed Windows Alt+V image paste reporting "no image found" when clipboard contains a screenshot</li>
+        <li>Fixed Bedrock <code>awsCredentialExport</code> being skipped when ambient AWS credentials resolve — now always runs when configured (fixes cross-account access)</li>
+        <li>Fixed MCP HTTP/SSE servers returning 403 showing as "failed" instead of "needs auth"</li>
+        <li>Fixed Remote Control MCP connectors all failing with 401 when worker session token rotated mid-session</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-hooks">hooks</span><span class="tag tag-agentic">agentic</span><span class="tag tag-plugin">plugin</span><span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.140</span>
+          <span class="entry-date">May 12, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Case-insensitive Agent subagent_type matching, reactive compaction fix, /goal hook fix</div>
+        <div class="entry-body">
+          <ul>
+        <li>Agent tool <code>subagent_type</code> matching now accepts case- and separator-insensitive values (<code>"Code Reviewer"</code> resolves to <code>code-reviewer</code>)</li>
+        <li>Fixed <code>/goal</code> silently hanging when <code>disableAllHooks</code> or <code>allowManagedHooksOnly</code> is set — now shows a clear message</li>
+        <li>Fixed reactive compaction regression causing premature reruns</li>
+        <li>Fixed <code>claude --bg</code> failing when background service was about to idle-exit</li>
+        <li>Fixed <code>/loop</code> scheduling redundant wakeups for background tasks that already notify on completion</li>
+        <li>Fixed <code>Read</code> tool calls failing validation when <code>offset</code> is passed as whitespace-padded or <code>+</code>-prefixed string</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,agentic,hooks,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.139</span>
+          <span class="entry-date">May 11, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Agent view (Research Preview) + /goal command for autonomous multi-turn work</div>
+        <div class="entry-body">
+          <ul>
+        <li><strong>Agent view</strong> (Research Preview): <code>claude agents</code> shows a unified list of every Claude Code session — running, blocked, or completed. Left arrow opens it from any session; select a row to preview or reply inline without attaching. Available on Pro, Max, Team, Enterprise, and API</li>
+        <li><strong><code>/goal</code> command</strong>: set a completion condition and Claude keeps working across turns until met. Shows live elapsed time, turn count, and token usage overlay. Works in interactive, <code>-p</code>, and Remote Control modes</li>
+        <li><code>/scroll-speed</code> command to tune mouse wheel scroll speed with live preview</li>
+        <li>Hook <code>args: string[]</code> exec form — spawns command directly without a shell so path placeholders never need quoting</li>
+        <li>Hook <code>continueOnBlock</code> config option for <code>PostToolUse</code> — feeds rejection reason back to Claude and continues the turn</li>
+        <li>MCP stdio servers now receive <code>CLAUDE_PROJECT_DIR</code> in their environment; plugin configs can reference <code>${CLAUDE_PROJECT_DIR}</code></li>
+        <li>Compaction prompt now asks model to preserve sensitive user instructions</li>
+        <li>API requests from subagents now carry <code>x-claude-code-agent-id</code> / <code>x-claude-code-parent-agent-id</code> headers</li>
+        <li>Fixed deadlock where expired credentials + <code>forceRemoteSettingsRefresh</code> policy blocked all auth commands</li>
+        <li>Fixed unbounded memory growth when HTTP/SSE MCP server streams non-protocol data (capped at 16 MB per SSE frame)</li>
+        <li>Fixed <code>Skill(name *)</code> permission rules wildcard form — now works as prefix match</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-agentic">agentic</span><span class="tag tag-hooks">hooks</span><span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.138</span>
+          <span class="entry-date">May 9, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Internal fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li>Internal fixes only — no user-visible changes</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.137</span>
+          <span class="entry-date">May 9, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">VS Code extension Windows activation fix</div>
+        <div class="entry-body">
+          <ul>
+        <li>Fixed VS Code extension failing to activate on Windows</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,security,mcp,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.136</span>
+          <span class="entry-date">May 8, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">autoMode.hard_deny rules, MCP /clear fix, OAuth concurrent refresh fix, 40+ bug fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>settings.autoMode.hard_deny</code> — unconditional blocking rules for auto mode that cannot be overridden by user intent or allow exceptions</li>
+        <li><code>CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL</code> to re-enable session quality survey for enterprises using OpenTelemetry</li>
+        <li>Fixed MCP servers configured in <code>.mcp.json</code>, plugins, and claude.ai connectors silently disappearing after <code>/clear</code> in VS Code, JetBrains, and Agent SDK</li>
+        <li>Fixed MCP OAuth refresh tokens being lost when multiple servers refresh concurrently — eliminates daily re-auth with several remote MCP servers</li>
+        <li>Fixed API error (400) when extended thinking emitted a redacted thinking block after a tool call</li>
+        <li>Fixed <code>--resume</code>/<code>--continue</code> not finding sessions when project path contains underscores</li>
+        <li>Fixed plan mode not blocking file writes when a matching <code>Edit(...)</code> allow rule exists</li>
+        <li>WSL2: image paste from Windows clipboard now works via PowerShell fallback when xclip/wl-paste fail</li>
+        <li>40+ additional rendering, UI, and plugin fixes</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-security">security</span><span class="tag tag-mcp">mcp</span><span class="tag tag-plugin">plugin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,hooks,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.133</span>
+          <span class="entry-date">May 7, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">worktree.baseRef setting, sandbox binary paths, hooks receive effort level, parallel session auth fix</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>worktree.baseRef</code> setting (<code>fresh</code> | <code>head</code>) — choose whether <code>--worktree</code>, <code>EnterWorktree</code>, and agent-isolation worktrees branch from <code>origin/<default></code> or local <code>HEAD</code>; default <code>fresh</code> changes <code>EnterWorktree</code> behavior back (set <code>"head"</code> to keep unpushed commits)</li>
+        <li><code>sandbox.bwrapPath</code> and <code>sandbox.socatPath</code> managed settings (Linux/WSL) for custom bubblewrap/socat binary locations</li>
+        <li><code>parentSettingsBehavior</code> admin-tier key (<code>first-wins</code> | <code>merge</code>) for SDK <code>managedSettings</code> merge policy</li>
+        <li>Hooks now receive active effort level via <code>effort.level</code> JSON field and <code>$CLAUDE_EFFORT</code> env var; Bash tool commands can also read <code>$CLAUDE_EFFORT</code></li>
+        <li>Fixed parallel sessions all dead-ending at 401 after a refresh-token race wiped shared credentials</li>
+        <li>Fixed <code>Edit</code>/<code>Write</code> allow rules scoped to drive root (<code>C:\</code>) or POSIX <code>/</code> always prompting incorrectly</li>
+        <li>Fixed <code>HTTP(S)_PROXY</code>/<code>NO_PROXY</code>/mTLS not respected for full MCP OAuth flow</li>
+        <li>Fixed subagents not discovering project, user, or plugin skills via the Skill tool</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-hooks">hooks</span><span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.132</span>
+          <span class="entry-date">May 6, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">CLAUDE_CODE_SESSION_ID in Bash subprocess, disable alternate screen, graceful SIGINT shutdown, 20+ fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>CLAUDE_CODE_SESSION_ID</code> environment variable now available in the Bash tool subprocess environment, matching <code>session_id</code> passed to hooks</li>
+        <li><code>CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1</code> to opt out of the fullscreen alternate-screen renderer and keep conversation in native terminal scrollback</li>
+        <li>Fixed external SIGINT (e.g. IDE stop button, <code>kill -INT</code>) not running graceful shutdown — terminal modes now restored and <code>--resume</code> hint printed</li>
+        <li>Fixed <code>--resume</code> failing with emoji truncation errors; pre-corrupted sessions sanitized on load</li>
+        <li>Fixed <code>--permission-mode</code> flag ignored when resuming a plan-mode session</li>
+        <li>Fixed fullscreen mode showing blank screen after laptop sleep/wake or Ctrl+Z/<code>fg</code></li>
+        <li>Fixed unbounded memory growth (10GB+ RSS) when stdio MCP server writes non-protocol data to stdout</li>
+        <li>Fixed Bedrock and Vertex 400 errors when <code>ENABLE_PROMPT_CACHING_1H</code> is set</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-perf">perf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="ide,feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.131</span>
+          <span class="entry-date">May 6, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">VS Code Windows activation fix, Mantle authentication fix</div>
+        <div class="entry-body">
+          <ul>
+        <li>Fixed VS Code extension failing to activate on Windows due to hardcoded build path in bundled SDK (<code>createRequire</code> polyfill bug)</li>
+        <li>Fixed Mantle endpoint authentication failing with missing <code>x-api-key</code> header</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-ide">ide</span><span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,plugin,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.129</span>
+          <span class="entry-date">May 6, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">--plugin-url zip flag, FORCE_SYNC_OUTPUT, auto-update setting, Ctrl+R history reverted to global</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>--plugin-url <url></code> flag to fetch a plugin <code>.zip</code> archive from URL for the current session</li>
+        <li><code>CLAUDE_CODE_FORCE_SYNC_OUTPUT=1</code> to force-enable synchronized output on terminals that auto-detection misses (e.g. Emacs <code>eat</code>)</li>
+        <li><code>CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE</code>: when set on Homebrew or WinGet, Claude Code runs upgrade in background and prompts to restart</li>
+        <li><code>skillOverrides</code> setting now works: <code>off</code> hides from model and <code>/</code>, <code>user-invocable-only</code> hides from model only, <code>name-only</code> collapses description</li>
+        <li>Ctrl+R history picker now defaults to all prompts across all projects (matching pre-2.1.124 behavior); press Ctrl+S to narrow to current project</li>
+        <li>Fixed 1-hour prompt cache TTL being silently downgraded to 5 minutes</li>
+        <li>Fixed agent panel below prompt hidden when subagents running (regression in 2.1.122)</li>
+        <li>Fixed <code>Bash(mkdir *)</code>, <code>Bash(touch *)</code> and similar allow rules not honored for in-project paths</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-plugin">plugin</span><span class="tag tag-perf">perf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="agentic,feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">Code w/ Claude 2026</span>
+          <span class="entry-date">May 6, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Dreaming (research preview), Outcomes (public beta), Multi-agent orchestration — Managed Agents launch event</div>
+        <div class="entry-body">
+          <ul>
+        <li><strong>Dreaming</strong> (Research Preview): scheduled background process that reviews agent past sessions, identifies recurring mistakes and team preferences, then updates agent memory store. Harvey (legal AI) reports ~6x improvement in task completion during testing</li>
+        <li><strong>Outcomes</strong> (Public Beta): self-grading mechanism — define a success rubric, a separate evaluator scores results and directs agent to fix deficiencies. Showed 8.4–10.1% quality improvement on document tasks</li>
+        <li><strong>Multi-agent orchestration</strong> (Public Beta): lead agent decomposes tasks and delegates to specialist subagents with individual traceability. Netflix reports using it to process build logs from hundreds of repos simultaneously</li>
+        <li><strong>Routines</strong>: cloud-based saved automations with schedule/API/webhook triggers; runs without local machine. Research preview across all paid plans — developers "wake up to PRs that are ready to merge"</li>
+        <li>CI auto-fix and security review automations announced; code review used internally at Anthropic across engineering</li>
+        <li><strong>Five-hour usage limit doubled</strong> for Pro, Max, and Enterprise customers</li>
+        <li>SpaceX Colossus data center partnership for increased compute capacity; 17x year-on-year API volume increase</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-agentic">agentic</span><span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,mcp,plugin,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.128</span>
+          <span class="entry-date">May 4, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Gateway model picker, /mcp tool counts, channels auth, EnterWorktree base fix, 25+ fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>/model</code> picker now lists models from gateway's <code>/v1/models</code> endpoint when <code>ANTHROPIC_BASE_URL</code> points at an Anthropic-compatible gateway</li>
+        <li><code>/mcp</code> now shows tool count for connected servers and flags servers connected with 0 tools</li>
+        <li><code>--plugin-dir</code> now accepts <code>.zip</code> plugin archives in addition to directories</li>
+        <li><code>--channels</code> now works with console (API key) authentication</li>
+        <li><code>EnterWorktree</code> now creates new branch from local HEAD as documented instead of <code>origin/<default-branch></code> — unpushed commits no longer dropped</li>
+        <li>Subprocesses (Bash, hooks, MCP, LSP) no longer inherit <code>OTEL_*</code> environment variables</li>
+        <li>Fixed sessions on 1M-context models falsely blocked with "Prompt is too long" before actual API limit</li>
+        <li>Fixed parallel shell tool calls: failing read-only command no longer cancels sibling calls</li>
+        <li>Fixed <code>/plugin update</code> never detecting new versions of npm-sourced plugins</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-mcp">mcp</span><span class="tag tag-plugin">plugin</span><span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,security,mcp,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.126</span>
+          <span class="entry-date">May 1, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">claude project purge, gateway model discovery, extended --dangerously-skip-permissions, OAuth CLI paste, security fix</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>claude project purge [path]</code> deletes all Claude Code state for a project (transcripts, tasks, file history, config entry) — supports <code>--dry-run</code>, <code>-y/--yes</code>, <code>-i/--interactive</code>, and <code>--all</code></li>
+        <li><code>/model</code> picker lists models from gateway's <code>/v1/models</code> endpoint when using custom <code>ANTHROPIC_BASE_URL</code></li>
+        <li><code>--dangerously-skip-permissions</code> now bypasses prompts for writes to <code>.claude/</code>, <code>.git/</code>, <code>.vscode/</code>, shell config files (catastrophic removal commands still prompt)</li>
+        <li><code>claude auth login</code> now accepts OAuth code pasted into terminal when browser callback can't reach localhost (WSL2, SSH, containers)</li>
+        <li><strong>Security</strong>: fixed <code>allowManagedDomainsOnly</code>/<code>allowManagedReadPathsOnly</code> being ignored when a higher-priority managed-settings source lacked a <code>sandbox</code> block</li>
+        <li>Windows: PowerShell now treated as primary shell when PowerShell tool is enabled</li>
+        <li>Fixed pasting image larger than 2000px breaking session — images now downscaled on paste</li>
+        <li>Fixed background and remote sessions falsely aborting with "Stream idle timeout" during long model thinking pauses</li>
+        <li>Fixed Japanese/Korean/Chinese text rendering as garbled characters on Windows in no-flicker mode</li>
+        <li>Fixed deferred tools (WebSearch, WebFetch) not available to skills with <code>context: fork</code> on their first turn</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-security">security</span><span class="tag tag-mcp">mcp</span><span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.123</span>
+          <span class="entry-date">Apr 29, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">OAuth 401 retry loop fix for CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS</div>
+        <div class="entry-body">
+          <ul>
+        <li>Fixed OAuth authentication failing with a 401 retry loop when <code>CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1</code> is set</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,mcp">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.122</span>
+          <span class="entry-date">Apr 28, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Bedrock service tier selection, PR URL session resumption, MCP deduplication, OTel improvements</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>ANTHROPIC_BEDROCK_SERVICE_TIER</code> env var to select a Bedrock service tier (<code>default</code>, <code>flex</code>, or <code>priority</code>)</li>
+        <li>Pasting a PR URL into <code>/resume</code> search box now finds the session that created that PR (GitHub, GitHub Enterprise, GitLab, and Bitbucket)</li>
+        <li><code>/mcp</code> now shows claude.ai connectors hidden by a manually-added server with the same URL, with a hint to remove the duplicate</li>
+        <li>OpenTelemetry: numeric attributes on <code>api_request</code>/<code>api_error</code> log events now emitted as numbers, not strings</li>
+        <li>OpenTelemetry: added <code>claude_code.at_mention</code> log event for <code>@</code>-mention resolution</li>
+        <li>Fixed images sent to newer models being resized to 2576px instead of correct 2000px maximum</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-mcp">mcp</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,mcp,hooks,plugin">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.121</span>
+          <span class="entry-date">Apr 28, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">alwaysLoad MCP, PostToolUse output replacement, plugin prune, /skills search, memory leak fixes</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>alwaysLoad</code> option in MCP server config — all tools from that server skip tool-search deferral and are always available to the model</li>
+        <li><code>claude plugin prune</code> removes orphaned auto-installed plugin dependencies; <code>plugin uninstall --prune</code> cascades</li>
+        <li><code>PostToolUse</code> hooks can now replace tool output for all tools via <code>hookSpecificOutput.updatedToolOutput</code> (was MCP-only)</li>
+        <li><code>/skills</code> menu has a type-to-filter search box for finding skills in long lists without scrolling</li>
+        <li>Fullscreen mode: typing into prompt no longer jumps scroll to bottom after scrolling up to read earlier output</li>
+        <li>MCP servers that hit transient errors during startup now auto-retry up to 3 times</li>
+        <li>Vertex AI: support X.509 certificate-based Workload Identity Federation (mTLS ADC)</li>
+        <li>Fixed unbounded memory growth (multi-GB RSS) when processing many images in a session</li>
+        <li>Fixed <code>/usage</code> leaking up to ~2GB of memory on machines with large transcript histories</li>
+        <li>Fixed memory leak when long-running tools fail to emit a clear progress event</li>
+        <li>Fixed Bash tool permanently unusable when directory Claude was started in is deleted or moved mid-session</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-mcp">mcp</span><span class="tag tag-hooks">hooks</span><span class="tag tag-plugin">plugin</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,agentic">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.120</span>
+          <span class="entry-date">Apr 28, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Windows no longer requires Git, claude ultrareview CLI subcommand, skills ${CLAUDE_EFFORT}, AI_AGENT env var</div>
+        <div class="entry-body">
+          <ul>
+        <li><strong>Windows</strong>: Git for Windows (Git Bash) no longer required — when absent, Claude Code uses PowerShell as the shell tool</li>
+        <li><code>claude ultrareview [target]</code> subcommand runs <code>/ultrareview</code> non-interactively from CI or scripts — prints findings to stdout (<code>--json</code> for raw output), exits 0 on completion or 1 on failure</li>
+        <li>Skills can now reference the current effort level with <code>${CLAUDE_EFFORT}</code> in their content</li>
+        <li><code>AI_AGENT</code> environment variable set for subprocesses so <code>gh</code> can attribute traffic to Claude Code</li>
+        <li>Fixed pressing Esc during stdio MCP tool call closing entire server connection (regression in 2.1.105)</li>
+        <li>Fixed <code>DISABLE_TELEMETRY</code>/<code>CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC</code> not suppressing usage metrics telemetry for API/enterprise users</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-agentic">agentic</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,hooks,security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.119</span>
+          <span class="entry-date">Apr 23, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">/config persists to settings.json, --from-pr for GitLab/Bitbucket, PowerShell auto-approve, PostToolUse duration_ms</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>/config</code> settings (theme, editor mode, verbose, etc.) now persist to <code>~/.claude/settings.json</code> and participate in project/local/policy override precedence</li>
+        <li><code>--from-pr</code> now accepts GitLab merge-request, Bitbucket pull-request, and GitHub Enterprise PR URLs</li>
+        <li>PowerShell tool commands can now be auto-approved in permission mode, matching Bash behavior</li>
+        <li><code>PostToolUse</code> and <code>PostToolUseFailure</code> hook inputs now include <code>duration_ms</code> (tool execution time)</li>
+        <li><strong>Security</strong>: <code>blockedMarketplaces</code> now correctly enforces <code>hostPattern</code> and <code>pathPattern</code> entries</li>
+        <li><code>prUrlTemplate</code> setting to point footer PR badge at a custom code-review URL</li>
+        <li><code>CLAUDE_CODE_HIDE_CWD</code> env var to hide working directory in the startup logo</li>
+        <li>Fixed Glob and Grep tools disappearing on native macOS/Linux builds when Bash tool is denied via permissions</li>
+        <li>Fixed scrolling up in fullscreen mode snapping back to the bottom every time a tool finishes</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-hooks">hooks</span><span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="major" data-tags="feature,hooks,ide">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.118</span>
+          <span class="entry-date">Apr 23, 2026</span>
+          <span class="entry-sig sig-major">Major</span>
+        </div>
+        <div class="entry-title">Vim visual mode, /usage merges /cost + /stats, custom themes, hooks can invoke MCP tools, WSL Windows managed settings</div>
+        <div class="entry-body">
+          <ul>
+        <li><strong>Vim visual mode</strong> (<code>v</code>) and visual-line mode (<code>V</code>) with selection, operators, and visual feedback</li>
+        <li><code>/cost</code> and <code>/stats</code> merged into <code>/usage</code> — both remain as typing shortcuts that open the relevant tab</li>
+        <li><strong>Custom themes</strong>: create and switch between named themes from <code>/theme</code>, or hand-edit JSON in <code>~/.claude/themes/</code>; plugins can ship themes via a <code>themes/</code> directory</li>
+        <li><strong>Hooks can now invoke MCP tools</strong> directly via <code>type: "mcp_tool"</code> — enables reactive automation using any connected MCP server</li>
+        <li><code>DISABLE_UPDATES</code> env var to completely block all update paths including manual <code>claude update</code></li>
+        <li>WSL on Windows can now inherit Windows-side managed settings via <code>wslInheritsWindowsSettings</code> policy key</li>
+        <li>Auto mode: include <code>"$defaults"</code> in <code>autoMode.allow</code> to add custom rules alongside built-in list</li>
+        <li><code>claude plugin tag</code> to create release git tags for plugins with version validation</li>
+        <li>Fixed MCP servers whose OAuth token response omits <code>expires_in</code> requiring re-auth every hour</li>
+        <li>Fixed credential save crash on Linux/Windows corrupting <code>~/.claude/.credentials.json</code></li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-hooks">hooks</span><span class="tag tag-ide">ide</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,perf">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.117</span>
+          <span class="entry-date">Apr 22, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">Model selection persists across restarts, effort default raised for Pro/Max Opus 4.6, embedded bfs/ugrep on macOS/Linux</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>/model</code> selections now persist across restarts even when project pins a different model; startup header shows when active model comes from a pin</li>
+        <li><strong>Default effort for Pro/Max subscribers on Opus 4.6 and Sonnet 4.6 is now <code>high</code></strong> (was <code>medium</code>)</li>
+        <li>Native builds on macOS and Linux: <code>Glob</code> and <code>Grep</code> tools replaced by embedded <code>bfs</code> and <code>ugrep</code> — faster searches without a separate tool round-trip</li>
+        <li>Forked subagents can now be enabled on external builds by setting <code>CLAUDE_CODE_FORK_SUBAGENT=1</code></li>
+        <li>Agent frontmatter <code>mcpServers</code> now loaded for main-thread agent sessions via <code>--agent</code></li>
+        <li>/resume now offers to summarize stale, large sessions before re-reading them</li>
+        <li>Fixed <code>WebFetch</code> hanging on very large HTML pages by truncating input before HTML-to-markdown conversion</li>
+        <li>Fixed Opus 4.7 sessions showing inflated <code>/context</code> percentages and autocompacting too early (was using 200K instead of native 1M context window)</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-perf">perf</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="notable" data-tags="feature,perf,security">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.116</span>
+          <span class="entry-date">Apr 20, 2026</span>
+          <span class="entry-sig sig-notable">Notable</span>
+        </div>
+        <div class="entry-title">/resume 67% faster, parallel MCP startup, inline thinking progress, security sandbox auto-allow fix</div>
+        <div class="entry-body">
+          <ul>
+        <li><code>/resume</code> on large sessions up to 67% faster on 40MB+ sessions</li>
+        <li>Faster MCP startup when multiple stdio servers configured; <code>resources/templates/list</code> deferred to first <code>@</code>-mention</li>
+        <li>Thinking spinner now shows inline progress ("still thinking", "thinking more", "almost done thinking") replacing the separate hint row</li>
+        <li>Smoother fullscreen scrolling in VS Code, Cursor, and Windsurf terminals</li>
+        <li><strong>Security</strong>: sandbox auto-allow no longer bypasses the dangerous-path safety check for <code>rm</code>/<code>rmdir</code> targeting <code>/</code>, <code>$HOME</code>, or other critical system directories</li>
+        <li>Claude Code and installer now use <code>https://downloads.claude.ai/claude-code-releases</code> instead of old GCS bucket URL</li>
+        <li>Fixed scrollback duplication in inline mode where resizing or large output bursts repeated earlier conversation history</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span><span class="tag tag-perf">perf</span><span class="tag tag-security">security</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry" data-sig="minor" data-tags="feature">
+      <div class="entry-card">
+        <div class="entry-header">
+          <span class="entry-version">v2.1.114</span>
+          <span class="entry-date">Apr 18, 2026</span>
+          <span class="entry-sig sig-minor">Minor</span>
+        </div>
+        <div class="entry-title">Crash fix for permission dialog in Agent Teams</div>
+        <div class="entry-body">
+          <ul>
+        <li>Fixed a crash in the permission dialog when an Agent Teams teammate requested tool permission</li>
+        </ul>
+        </div>
+        <div class="tags">
+          <span class="tag tag-feature">feature</span>
+        </div>
+      </div>
+    </div>
 
     <!-- =================== APRIL 2026 =================== -->
     <div class="month-sep"><span>April 2026</span></div>
@@ -2062,7 +2644,7 @@
 
   <footer>
     <p>Agentic Coding News &middot; Data sourced from official changelog, GitHub releases, and community reports</p>
-    <p>Last updated: April 18, 2026 &middot; v2.1.9 through v2.1.113</p>
+    <p>Last updated: May 15, 2026 &middot; v2.1.9 through v2.1.142</p>
   </footer>
 </div>
 
